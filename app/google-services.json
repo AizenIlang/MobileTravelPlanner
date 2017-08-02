@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "822697876264",
+    "firebase_url": "https://travelplanner-c165a.firebaseio.com",
+    "project_id": "travelplanner-c165a",
+    "storage_bucket": "travelplanner-c165a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822697876264:android:93f72ea59dc21631",
+        "android_client_info": {
+          "package_name": "com.example.danzee.travelplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "822697876264-dpd8ggqcm354hho9orlqm4fdss0hg2qd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.danzee.travelplanner",
+            "certificate_hash": "ea6a0d370a47268dcb4ce967a3b9db537473caa6"
+          }
+        },
+        {
+          "client_id": "822697876264-5mutq6r563j91l1bfk9pra364ch8d1o0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcz6vNKIUeu6LWBjHP7CbXk2NgNPvBGCI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "822697876264-5mutq6r563j91l1bfk9pra364ch8d1o0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
