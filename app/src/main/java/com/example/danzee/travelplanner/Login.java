@@ -2,6 +2,7 @@ package com.example.danzee.travelplanner;
 
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -69,7 +70,7 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
 
     }
 
-    public void AttemptLogin(String Email, String Password){
+    public void AttemptLogin(final String Email, String Password){
         mAuth.signInWithEmailAndPassword(Email,Password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -78,6 +79,9 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG_LOGIN, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            startActivity(new Intent(Login.this,MainActivity.class));
+                            finish();
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -92,8 +96,8 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
                 });
     }
 
-    public void SignUp(User user){
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
+    public void SignUp(final User user1){
+        mAuth.createUserWithEmailAndPassword(user1.getEmail(), user1.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -105,7 +109,8 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
                                     Toast.LENGTH_SHORT).show();
 
 
-                            onCancelRegistration();
+                            CheckUserExist(user1);
+
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -130,7 +135,8 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(mAuth.getCurrentUser().getUid())){
                     User newUser = dataSnapshot.getValue(User.class);
-                    //Start a new Intent here
+                    startActivity(new Intent(Login.this,MainActivity.class));
+                    finish();
                     //finish the Intent here
 
                 }else{
@@ -139,7 +145,7 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
 
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    //Start New Intent here
+                                    startActivity(new Intent(Login.this,MainActivity.class));
                                 }
                             });
                 }

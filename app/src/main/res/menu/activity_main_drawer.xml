@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_travels"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="My Travels" />
+
+        <item
+            android:id="@+id/nav_hotels"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Hotels" />
+        <item
+            android:id="@+id/nav_activities"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Activities" />
+        <item
+            android:id="@+id/nav_restaurant"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Restaurant" />
+    </group>
+
+    <item android:title="Profile">
+        <menu>
+            <item
+                android:id="@+id/nav_my_profile"
+                android:icon="@drawable/ic_menu_share"
+                android:title="My Profile" />
+            <item
+                android:id="@+id/nav_admin"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="Admin" />
+            <item
+                android:id="@+id/nav_log_out"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Log out" />
+        </menu>
+    </item>
+
+</menu>

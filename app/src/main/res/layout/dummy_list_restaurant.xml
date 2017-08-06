@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.danzee.travelplanner.Admin.AdminHotel">
+
+
+    <RelativeLayout
+        android:layout_width="343dp"
+        android:layout_height="101dp"
+        android:background="@drawable/box_fragment_darker_thin"
+        android:elevation="11dp"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="104dp">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView6"
+            android:layout_below="@+id/textView6"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam elit augue, tempor at varius id, porta ut magna."
+            android:textColor="@color/backgroundLight"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView3"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/imageView3"
+            android:text="Donna Cafe and Lounge"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="137dp"
+            android:layout_height="76dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="13dp"
+            android:background="@drawable/restaurantsample"
+            tools:layout_editor_absoluteX="95dp"
+            tools:layout_editor_absoluteY="101dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="343dp"
+        android:layout_height="101dp"
+        android:background="@drawable/box_fragment_darker_thin"
+        android:elevation="11dp"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="228dp">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView6"
+            android:layout_below="@+id/textView6"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam elit augue, tempor at varius id, porta ut magna."
+            android:textColor="@color/backgroundLight"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView3"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/imageView3"
+            android:text="21 Hotel Restaurant"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="137dp"
+            android:layout_height="76dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="13dp"
+            android:background="@drawable/restaurant2sample"
+            tools:layout_editor_absoluteX="95dp"
+            tools:layout_editor_absoluteY="101dp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CORON"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EL NIDO"
+        tools:layout_editor_absoluteX="146dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PUERTO"
+        tools:layout_editor_absoluteX="275dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+</android.support.constraint.ConstraintLayout>
