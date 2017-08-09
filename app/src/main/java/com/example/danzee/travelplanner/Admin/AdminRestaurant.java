@@ -6,11 +6,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -20,11 +21,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.example.danzee.travelplanner.Group.Group;
+import com.example.danzee.travelplanner.Activities.Activities;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.R;
+import com.example.danzee.travelplanner.Restaurant.Restaurant;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,35 +36,54 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
-public class AdminHotel extends AppCompatActivity {
+/**
+ * Created by DanZee on 08/08/2017.
+ */
+
+public class AdminRestaurant extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 500;
     public static final int GALLERY_INTENT_CALLED = 1;
     public static final int GALLERY_KITKAT_INTENT_CALLED = 2;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    ImageView imageAttach;
-    FrameLayout imageContainer;
-
-    EditText Name;
-    EditText Company;
-    EditText Details;
-    EditText Location1;
-    EditText Location2;
-    Spinner Group;
-    Button addHotel;
-    ProgressBar progressBar;
-    ConstraintLayout parentView;
-
+    private EditText Name;
+    private EditText Price;
+    private EditText Company;
+    private String PhotoUrl;
+    private EditText Details;
+    private EditText MapCoordinates;
+    private Spinner Group;
+    private ImageView imageView;
+    private FrameLayout imageContainer;
+    private ConstraintLayout parentview;
+    private Button addRestaurantBtn;
+    private ProgressBar progressBar;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_admin_restaurant);
 
-        setContentView(R.layout.activity_admin_hotel);
         initPage();
+    }
+
+    private void initPage(){
+        Name = (EditText) findViewById(R.id.admin_restaurant_name);
+        Price = (EditText) findViewById(R.id.admin_restaurant_price);
+        Company = (EditText) findViewById(R.id.admin_restuarant_company);
+        Details = (EditText) findViewById(R.id.admin_restaurant_details);
+        MapCoordinates = (EditText) findViewById(R.id.admin_restaurant_map);
+        Group = (Spinner) findViewById(R.id.admin_restaurant_spinner);
+        imageView = (ImageView) findViewById(R.id.admin_restaurant_image_view);
+        imageContainer = (FrameLayout) findViewById(R.id.admin_restaurant_imageContainer);
+        parentview = (ConstraintLayout) findViewById(R.id.admin_restaurant_parentview);
+        progressBar = (ProgressBar) findViewById(R.id.admin_restaurant_progress_bar);
+        addRestaurantBtn = (Button) findViewById(R.id.admin_restaurant_add_btn);
+
+
     }
 
     private class ImageUploadListener implements View.OnClickListener{
@@ -96,35 +116,35 @@ public class AdminHotel extends AppCompatActivity {
             imageContainer.setDrawingCacheEnabled(false);
             byte[] data = baos.toByteArray();
 
-            String path = "Hotels/";
+            String path = "Restaurant/";
 
             path += Name.getText().toString() +".png";
             StorageReference fireReferenceStorage = storage.getReference(path);
 
             progressBar.setVisibility(View.VISIBLE);
-            addHotel.setEnabled(false);
+            addRestaurantBtn.setEnabled(false);
 
-            final Hotel tempHotel = new Hotel();
-            tempHotel.setName(Name.getText().toString());
-            tempHotel.setCompany(Company.getText().toString());
-            tempHotel.setDetails(Details.getText().toString());
-            tempHotel.setGroup(Group.getSelectedItem().toString());
-            tempHotel.setLocation1(Location1.getText().toString());
-            tempHotel.setLocation2(Location2.getText().toString());
-            tempHotel.setPhotoURL(path);
+            final Restaurant tempRestaurant = new Restaurant();
+            tempRestaurant.setName(Name.getText().toString());
+            tempRestaurant.setCompany(Company.getText().toString());
+            tempRestaurant.setDetails(Details.getText().toString());
+            tempRestaurant.setGroup(Group.getSelectedItem().toString());
+            tempRestaurant.setLocation1(MapCoordinates.getText().toString());
+
+            tempRestaurant.setPhotoUrl(path);
 
 
             final UploadTask uploadTask = fireReferenceStorage.putBytes(data);
 
-            uploadTask.addOnSuccessListener(AdminHotel.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            uploadTask.addOnSuccessListener(AdminRestaurant.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                     //TODO Create an Upload Success Fragment and Destory session
-                    PostToDatabase(tempHotel);
+                    PostToDatabase(tempRestaurant);
                     progressBar.setVisibility(View.GONE);
-                    addHotel.setEnabled(true);
-                    Snackbar.make(parentView,"Added "+tempHotel.getName()+" Complete",Snackbar.LENGTH_SHORT).show();
+                    addRestaurantBtn.setEnabled(true);
+                    Snackbar.make(parentview,"Added "+tempRestaurant.getName()+" Complete",Snackbar.LENGTH_SHORT).show();
 
                 }
             });
@@ -133,22 +153,22 @@ public class AdminHotel extends AppCompatActivity {
         }
     }
 
-    private void PostToDatabase(Hotel value){
+    private void PostToDatabase(Restaurant value){
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         String key = firebaseDatabase.getReference().push().getKey();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Hotels").child(key);
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Restaurant").child(key);
 
         databaseReference.setValue(value);
 
         PostToGroup(value);
     }
 
-    private void PostToGroup(Hotel value){
+    private void PostToGroup(Restaurant value){
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         String myGroup = Group.getSelectedItem().toString();
         String key = firebaseDatabase.getReference().push().getKey();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Hotels").child(myGroup).child(key);
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Restaurant").child(myGroup).child(key);
 
         databaseReference.setValue(value);
 
@@ -163,10 +183,10 @@ public class AdminHotel extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             //NO NEED TO GET THE BITMAP. WE GET THE URI AND LET PICASSO HANDLE IT.
 
-            Uri tempUri = getImageUri(AdminHotel.this, imageBitmap);
+            Uri tempUri = getImageUri(AdminRestaurant.this, imageBitmap);
             Log.e("Camera", data.getData().toString());
-            Picasso.with(AdminHotel.this).load(tempUri).noPlaceholder().fit()
-                    .into(imageAttach);
+            Picasso.with(AdminRestaurant.this).load(tempUri).noPlaceholder().fit()
+                    .into(imageView);
 
 
         }
@@ -177,8 +197,8 @@ public class AdminHotel extends AppCompatActivity {
             if (requestCode == GALLERY_INTENT_CALLED) {
                 originalUri = data.getData();
                 Log.e("Gallery",data.getData().toString());
-                Picasso.with(AdminHotel.this).load(originalUri).noPlaceholder().fit()
-                        .into(imageAttach);
+                Picasso.with(AdminRestaurant.this).load(originalUri).noPlaceholder().fit()
+                        .into(imageView);
 
             } else if (requestCode == GALLERY_KITKAT_INTENT_CALLED) {
                 originalUri = data.getData();
@@ -187,8 +207,8 @@ public class AdminHotel extends AppCompatActivity {
                         | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 // Check for the freshest data.
                 Log.e("Gallery",data.getData().toString());
-                Picasso.with(AdminHotel.this).load(originalUri).noPlaceholder().fit()
-                        .into(imageAttach);
+                Picasso.with(AdminRestaurant.this).load(originalUri).noPlaceholder().fit()
+                        .into(imageView);
             }
         }
 
@@ -200,33 +220,4 @@ public class AdminHotel extends AppCompatActivity {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "tempOLB", null);
         return Uri.parse(path);
     }
-
-
-
-
-    private void initPage() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("ADMIN Hotel List");
-        imageAttach = (ImageView) findViewById(R.id.admin_hotels_image_view);
-        imageContainer = (FrameLayout) findViewById(R.id.admin_hotels_imageContainer);
-
-        // SETTING UP THE UI
-
-        Name = (EditText) findViewById(R.id.admin_hotel_name);
-        Company = (EditText) findViewById(R.id.admin_hotel_company);
-        Details = (EditText) findViewById(R.id.admin_hotel_details);
-        Location1 = (EditText) findViewById(R.id.admin_hotel_location1);
-        Location2 = (EditText) findViewById(R.id.admin_hotels_location2);
-        Group = (Spinner) findViewById(R.id.admin_hotels_spinner);
-        progressBar = (ProgressBar) findViewById(R.id.admin_hotels_progress_bar);
-        parentView = (ConstraintLayout) findViewById(R.id.admin_hotels_parentview);
-
-        imageAttach.setOnClickListener(new ImageUploadListener());
-
-        addHotel = (Button) findViewById(R.id.admin_hotel_add_btn);
-        addHotel.setOnClickListener(new UploadOnClickListener());
-        TextView hotelText = (TextView) findViewById(R.id.booking_add_hotel_list_Hotel);
-
-    }
-
 }

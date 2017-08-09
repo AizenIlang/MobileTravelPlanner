@@ -6,7 +6,7 @@ xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/dummy_hotel"
         android:layout_width="424dp"
         android:layout_height="154dp"
         android:background="@drawable/activitiessample"
@@ -25,7 +25,7 @@ xmlns:tools="http://schemas.android.com/tools"
         tools:layout_editor_absoluteY="122dp" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/hotel_add_name"
         android:layout_width="340dp"
         android:layout_height="41dp"
         android:fontFamily="cursive"
@@ -44,7 +44,7 @@ xmlns:tools="http://schemas.android.com/tools"
         tools:layout_editor_absoluteY="243dp">
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/hotel_add_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/booking_add_tCreateBooking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Booking"
+        android:textSize="30sp"
+        android:textStyle="bold"
+
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/booking_add_BookingName"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.16" />
+
+    <Button
+        android:id="@+id/booking_add_Hotel"
+        android:layout_width="302dp"
+        android:layout_height="77dp"
+        android:text="Hotel"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/booking_add_ActivityBtn"
+        android:transitionName="booking_add_hotel_shared"/>
+
+    <EditText
+        android:id="@+id/booking_add_BookingName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Enter Booking Name"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/booking_add_Hotel"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/booking_add_ActivityBtn"
+        android:layout_width="302dp"
+        android:layout_height="77dp"
+        android:text="Activity"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/booking_add_RestaurantBtn" />
+
+    <Button
+        android:id="@+id/booking_add_RestaurantBtn"
+        android:layout_width="302dp"
+        android:layout_height="77dp"
+        android:text="Restaurant"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout" />
+
+    <RelativeLayout
+        android:layout_width="439dp"
+        android:layout_height="173dp"
+        android:id="@+id/relativeLayout"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
+        android:layout_marginBottom="8dp">
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

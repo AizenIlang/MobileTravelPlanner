@@ -23,7 +23,17 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Admin.Admin" />
-        <activity android:name=".Admin.AdminHotel"></activity>
+        <activity android:name=".Admin.AdminHotel" />
+        <activity android:name=".Admin.AdminRoom" />
+        <activity android:name=".Admin.AdminActivity" />
+        <activity android:name=".Admin.AdminActivities" />
+        <activity android:name=".Admin.AdminRestaurant" />
+        <activity android:name=".Hotel.HotelList" />
+        <activity android:name=".Hotel.HotelDescription" />
+        <activity android:name=".Restaurant.RestaurantList" />
+        <activity android:name=".Restaurant.RestaurantDescription" />
+        <activity android:name=".Activities.ActivitiesList" />
+        <activity android:name=".Activities.ActivitiesDescription"></activity>
     </application>
 
 </manifest>

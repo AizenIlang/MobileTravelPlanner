@@ -1,5 +1,6 @@
 package com.example.danzee.travelplanner;
 
+import android.app.ActivityOptions;
 import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +16,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.danzee.travelplanner.Activities.ActivitiesList;
+import com.example.danzee.travelplanner.Admin.Admin;
+import com.example.danzee.travelplanner.Hotel.HotelList;
+import com.example.danzee.travelplanner.Restaurant.RestaurantList;
 import com.example.danzee.travelplanner.User.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,6 +52,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initPage();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
@@ -59,14 +67,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_my_travels) {
             // Handle the camera action
         } else if (id == R.id.nav_admin) {
+            startActivity(new Intent(MainActivity.this, Admin.class));
 
         } else if (id == R.id.nav_hotels) {
 
@@ -176,5 +178,39 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    private void initPage(){
+        Button hotelAddButton = (Button) findViewById(R.id.booking_add_Hotel);
+        Button activityAddButton = (Button) findViewById(R.id.booking_add_ActivityBtn);
+        Button restaurantAddButton = (Button) findViewById(R.id.booking_add_RestaurantBtn);
+
+        hotelAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedElementTransition();
+            }
+        });
+
+        activityAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,ActivitiesList.class));
+            }
+        });
+        restaurantAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,RestaurantList.class));
+            }
+        });
+    }
+
+    private void SharedElementTransition(){
+        View mySharedElement = findViewById(R.id.booking_add_Hotel);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,mySharedElement,"booking_add_hotel_shared");
+        Intent i = new Intent(MainActivity.this, HotelList.class);
+        startActivity(i,options.toBundle());
+
     }
 }

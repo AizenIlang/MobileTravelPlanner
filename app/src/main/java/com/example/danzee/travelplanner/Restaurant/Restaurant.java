@@ -1,29 +1,22 @@
-package com.example.danzee.travelplanner.Hotel;
-
-import com.example.danzee.travelplanner.Booking.Booking;
-import com.example.danzee.travelplanner.Rooms.Rooms;
+package com.example.danzee.travelplanner.Restaurant;
 
 /**
- * Created by DanZee on 03/08/2017.
+ * Created by DanZee on 08/08/2017.
  */
 
-public class Hotel {
-    private String ID;
+public class Restaurant {
     private String Name;
+    private double Price;
+    private String sPrice;
     private String Company;
+    private String PhotoUrl;
     private String Details;
-    private String PhotoURL;
     private String Location1;
     private String Location2;
-    private Rooms Rooms;
     private String Group;
 
-    public String getID() {
-        return ID;
-    }
+    public Restaurant(){
 
-    public void setID(String ID) {
-        this.ID = ID;
     }
 
     public String getName() {
@@ -34,6 +27,22 @@ public class Hotel {
         Name = name;
     }
 
+    public double getPrice() {
+        return Price;
+    }
+
+    public void setPrice(double price) {
+        Price = price;
+    }
+
+    public String getsPrice() {
+        return sPrice;
+    }
+
+    public void setsPrice(String sPrice) {
+        this.sPrice = sPrice;
+    }
+
     public String getCompany() {
         return Company;
     }
@@ -42,20 +51,20 @@ public class Hotel {
         Company = company;
     }
 
+    public String getPhotoUrl() {
+        return PhotoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        PhotoUrl = photoUrl;
+    }
+
     public String getDetails() {
         return Details;
     }
 
     public void setDetails(String details) {
         Details = details;
-    }
-
-    public String getPhotoURL() {
-        return PhotoURL;
-    }
-
-    public void setPhotoURL(String photoURL) {
-        PhotoURL = photoURL;
     }
 
     public String getLocation1() {
@@ -72,14 +81,6 @@ public class Hotel {
 
     public void setLocation2(String location2) {
         Location2 = location2;
-    }
-
-    public com.example.danzee.travelplanner.Rooms.Rooms getRooms() {
-        return Rooms;
-    }
-
-    public void setRooms(com.example.danzee.travelplanner.Rooms.Rooms rooms) {
-        Rooms = rooms;
     }
 
     public String getGroup() {

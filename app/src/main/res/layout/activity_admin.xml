@@ -19,7 +19,10 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/admin_hotels" />
+        android:transitionName="admin_headerTitle"
+        app:layout_constraintBottom_toTopOf="@+id/admin_hotels"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintVertical_bias="0.505" />
 
     <Button
         android:id="@+id/admin_hotels"
@@ -32,6 +35,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/admin_rooms"
+
         tools:layout_editor_absoluteY="175dp"
         tools:layout_editor_absoluteX="13dp" />
 
@@ -60,8 +64,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/admin_restaurant"
-        tools:layout_editor_absoluteY="295dp"
-        tools:layout_editor_absoluteX="12dp" />
+        app:layout_constraintHorizontal_bias="0.503" />
 
     <Button
         android:id="@+id/admin_restaurant"
