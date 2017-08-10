@@ -1,6 +1,9 @@
 package com.example.danzee.travelplanner.Activities;
 
+import android.net.Uri;
+
 import com.example.danzee.travelplanner.Booking.Booking;
+import com.google.firebase.database.Exclude;
 
 /**
  * Created by DanZee on 03/08/2017.
@@ -13,6 +16,9 @@ public class Activities {
     private String Details;
     private String Company;
     private String Map;
+
+    @Exclude
+    public Uri myUri;
 
     public String getCompany() {
         return Company;

@@ -83,6 +83,8 @@ public class AdminRestaurant extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.admin_restaurant_progress_bar);
         addRestaurantBtn = (Button) findViewById(R.id.admin_restaurant_add_btn);
 
+        imageView.setOnClickListener(new ImageUploadListener());
+        addRestaurantBtn.setOnClickListener(new UploadOnClickListener());
 
     }
 

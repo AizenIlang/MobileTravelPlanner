@@ -1,17 +1,23 @@
 package com.example.danzee.travelplanner.Hotel;
 
-import android.content.Context;
-import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Window;
+import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
+import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
 
+import com.bumptech.glide.Glide;
+import com.example.danzee.travelplanner.ListItemAdapter;
 import com.example.danzee.travelplanner.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,50 +30,108 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HotelList extends AppCompatActivity {
-    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
-    RecyclerView hotelRecyclerView;
-    Context context;
-    HotelAdapter hotelAdapter;
+    private RecyclerView recyclerView;
+    private ListItemAdapter adapter;
+    private List<Hotel> hotelList;
     public static Hotel selection;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-
         super.onCreate(savedInstanceState);
-        context = this.getApplicationContext();
         setContentView(R.layout.booking_add_hotel_list);
-        initPage();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.booking_add_hotel_toolbar);
+        setSupportActionBar(toolbar);
+        this.setTitle("Hotels");
+        initCollapsingToolbar();
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        hotelList = new ArrayList<>();
+        adapter = new ListItemAdapter(this, hotelList,this);
+
+        Button coron = (Button) findViewById(R.id.booking_add_hotel_coron_btn);
+        Button elnido = (Button) findViewById(R.id.booking_add_hotel_elnido_btn);
+        Button puerto = (Button) findViewById(R.id.booking_add_hotel_puerto_btn);
+
+        coron.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                populateListCoron();
+            }
+        });
+
+        elnido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                populateListElNido();
+            }
+        });
+
+        puerto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                populateListPuerto();
+            }
+        });
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        populateList();
+
+        try {
+            Glide.with(this).load(R.drawable.hotelsample).into((ImageView) findViewById(R.id.booking_add_hotel_list_backdrop));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        finishAfterTransition();
-        return true;
+    /**
+     * Initializing collapsing toolbar
+     * Will show and hide the toolbar title on scroll
+     */
+    private void initCollapsingToolbar() {
+        final CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(" ");
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.setExpanded(true);
+
+        // hiding & showing the title when toolbar expanded & collapsed
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbar.setTitle("Hotels");
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbar.setTitle(" ");
+                    isShow = false;
+                }
+            }
+        });
     }
 
-    private void initPage() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Hotel List");
-        final ArrayList<Hotel> myList = new ArrayList<Hotel>();
-
-
+    public void populateList()
+    {
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("Hotels");
-        final TextView hotelText = (TextView) findViewById(R.id.booking_add_hotel_list_Hotel);
-        hotelRecyclerView = (RecyclerView) findViewById(R.id.hotel_recycler_view);
-        hotelAdapter = new HotelAdapter(myList,context);
-        hotelRecyclerView.setAdapter(hotelAdapter);
-        hotelRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Hotel tempHotel = dataSnapshot.getValue(Hotel.class);
-                myList.add(tempHotel);
-                Log.e("HotelList :" ,dataSnapshot.toString());
-
+                tempHotel.setID(dataSnapshot.getKey());
+                hotelList.add(tempHotel);
             }
 
             @Override
@@ -94,9 +158,40 @@ public class HotelList extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                hotelAdapter = new HotelAdapter(myList,context);
-                hotelRecyclerView.setAdapter(hotelAdapter);
-                Log.e("Adapter :", "Called 1 :"+myList.size());
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void populateListCoron()
+    {
+        hotelList.clear();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Hotels").child("CORON");
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Hotel tempHotel = dataSnapshot.getValue(Hotel.class);
+                hotelList.add(tempHotel);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -105,10 +200,153 @@ public class HotelList extends AppCompatActivity {
             }
         });
 
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    public void hey(){
-        startActivity(new Intent(HotelList.this,HotelDescription.class));
+    public void populateListElNido()
+    {
+        hotelList.clear();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Hotels").child("EL NIDO");
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Hotel tempHotel = dataSnapshot.getValue(Hotel.class);
+                tempHotel.setID(dataSnapshot.getKey());
+                hotelList.add(tempHotel);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
+    public void populateListPuerto()
+    {
+        hotelList.clear();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Hotels").child("PUERTO");
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Hotel tempHotel = dataSnapshot.getValue(Hotel.class);
+                hotelList.add(tempHotel);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * RecyclerView item decoration - give equal margin around grid item
+     */
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
 }

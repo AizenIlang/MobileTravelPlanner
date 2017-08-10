@@ -1,4 +1,4 @@
-package com.example.danzee.travelplanner.Restaurant;
+package com.example.danzee.travelplanner.Rooms;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -12,12 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.danzee.travelplanner.Hotel.Hotel;
+import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.ListItemAdapter;
 import com.example.danzee.travelplanner.R;
 import com.google.firebase.database.ChildEventListener;
@@ -30,14 +31,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantList extends AppCompatActivity {
+public class RoomList extends AppCompatActivity {
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     private RecyclerView recyclerView;
-    private RestaurantAdapter adapter;
-    private List<Restaurant> hotelList;
-    public static Restaurant selection;
+    private RoomAdapter adapter;
+    private List<Rooms> hotelList;
+    public static Rooms selection;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,50 +48,27 @@ public class RestaurantList extends AppCompatActivity {
         this.setTitle("Hotels");
         initCollapsingToolbar();
 
+        LinearLayout tabLinear = (LinearLayout) findViewById(R.id.tab_linear);
+        tabLinear.setVisibility(View.GONE);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         hotelList = new ArrayList<>();
-        adapter = new RestaurantAdapter(this, hotelList,this);
+        adapter = new RoomAdapter(this, hotelList,this);
 
-        Button coron = (Button) findViewById(R.id.booking_add_hotel_coron_btn);
-        Button elnido = (Button) findViewById(R.id.booking_add_hotel_elnido_btn);
-        Button puerto = (Button) findViewById(R.id.booking_add_hotel_puerto_btn);
-
-        coron.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateListCoron();
-            }
-        });
-
-        elnido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateListElNido();
-            }
-        });
-
-        puerto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateListPuerto();
-            }
-        });
-
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         TextView title = (TextView) findViewById(R.id.booking_add_hotel_title);
         TextView header = (TextView) findViewById(R.id.booking_add_hotel_choose_header);
-        title.setText("Restaurant");
-        header.setText("Where do you want your Viand?");
-
+        title.setText("Rooms");
+        header.setText("Choose Desired Room");
         populateList();
 
         try {
-            Glide.with(this).load(R.drawable.restaurant2sample).into((ImageView) findViewById(R.id.booking_add_hotel_list_backdrop));
+            Glide.with(this).load(R.drawable.roomsample).into((ImageView) findViewById(R.id.booking_add_hotel_list_backdrop));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,7 +96,7 @@ public class RestaurantList extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle("Restaurant");
+                    collapsingToolbar.setTitle("Rooms");
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
@@ -130,148 +108,12 @@ public class RestaurantList extends AppCompatActivity {
 
     public void populateList()
     {
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Restaurant");
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("HotelRooms").child(HotelList.selection.getID());
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
-
-                hotelList.add(tempHotel);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void populateListCoron()
-    {
-        hotelList.clear();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Restaurant").child("CORON");
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
-                hotelList.add(tempHotel);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void populateListElNido()
-    {
-        hotelList.clear();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Restaurant").child("EL NIDO");
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
-
-                hotelList.add(tempHotel);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void populateListPuerto()
-    {
-        hotelList.clear();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Hotels").child("PUERTO");
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
+                Rooms tempHotel = dataSnapshot.getValue(Rooms.class);
+                tempHotel.setID(dataSnapshot.getKey());
                 hotelList.add(tempHotel);
             }
 

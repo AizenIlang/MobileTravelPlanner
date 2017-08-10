@@ -30,10 +30,12 @@
         <activity android:name=".Admin.AdminRestaurant" />
         <activity android:name=".Hotel.HotelList" />
         <activity android:name=".Hotel.HotelDescription" />
-        <activity android:name=".Restaurant.RestaurantList" />
         <activity android:name=".Restaurant.RestaurantDescription" />
+        <activity android:name=".Restaurant.RestaurantList" />
         <activity android:name=".Activities.ActivitiesList" />
         <activity android:name=".Activities.ActivitiesDescription"></activity>
+        <activity android:name=".Rooms.RoomList"></activity>
+        <activity android:name=".Rooms.RoomDescription"></activity>
     </application>
 
 </manifest>

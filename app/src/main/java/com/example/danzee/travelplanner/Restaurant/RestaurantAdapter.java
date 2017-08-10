@@ -1,65 +1,86 @@
 package com.example.danzee.travelplanner.Restaurant;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.Hotel.Hotel;
-import com.example.danzee.travelplanner.Hotel.HotelAdapter;
 import com.example.danzee.travelplanner.Hotel.HotelDescription;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.R;
+import com.example.danzee.travelplanner.Restaurant.Restaurant;
+import com.example.danzee.travelplanner.Restaurant.RestaurantList;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by DanZee on 08/08/2017.
- */
-
-public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder> {
-    private ArrayList<Restaurant> restaurantlist;
-    private Context context;
-
+public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.MyViewHolder> {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private Context mContext;
+    private List<Restaurant> hotelList;
+    private Activity mActivity;
 
-    public RestaurantAdapter(ArrayList<Restaurant> restaurantlist, Context context) {
-        this.restaurantlist = restaurantlist;
-        this.context = context;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView name, company;
+        public ImageView imageView, overflow;
+
+        public MyViewHolder(View view) {
+            super(view);
+            name = (TextView) view.findViewById(R.id.booking_add_hotel_name);
+            company = (TextView) view.findViewById(R.id.booking_add_hotel_company);
+            imageView = (ImageView) view.findViewById(R.id.booking_add_hotel_imageview);
+            overflow = (ImageView) view.findViewById(R.id.booking_add_hotel_overflow);
+        }
+    }
+
+
+    public RestaurantAdapter(Context mContext, List<Restaurant> albumList,Activity mActivity) {
+        this.mContext = mContext;
+        this.hotelList = albumList;
+        this.mActivity = mActivity;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.hotel_list_item,parent,false);
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.booking_add_hotel_item, parent, false);
 
-        return new RestaurantAdapter.ViewHolder(v);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Restaurant tempRestaurant = restaurantlist.get(position);
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        final Restaurant hotel = hotelList.get(position);
+        holder.name.setText(hotel.getName());
+        holder.company.setText(hotel.getCompany());
 
-        holder.nameView.setText(tempRestaurant.getName());
-        holder.descriptionView.setText(tempRestaurant.getDetails());
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RestaurantList.selected = tempRestaurant;
-                view.getContext().startActivity(new Intent(view.getContext(),RestaurantDescription.class));
+                RestaurantList.selection = hotel;
+                View mySharedElement = view.findViewById(R.id.booking_add_hotel_imageview);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity,mySharedElement,"hotelImage");
+                Intent i = new Intent(mContext, RestaurantDescription.class);
+                mContext.startActivity(i,options.toBundle());
+
             }
         });
         // Create a storage reference from our app
@@ -67,18 +88,20 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         StorageReference storageRef = storage.getReference();
 
 // Create a reference with an initial file path and name
-        String path = tempRestaurant.getPhotoUrl();
+        String path = hotel.getPhotoUrl();
 //        StorageReference pathReference = storageRef.child(path);
 
         storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 // Got the download URL for 'users/me/profile.png'
-                Picasso.with(context)
-                        .load(uri)
-                        .resize(50, 50)
-                        .centerCrop()
-                        .into(holder.imageView);
+                try{
+                    Glide.with(mContext).load(uri).into(holder.imageView);
+                    hotel.myUri = uri;
+                }catch (Exception e){
+                    Log.e("Logger",e.getMessage());
+                }
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -86,29 +109,60 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
                 // Handle any errors
             }
         });
+        // loading album cover using Glide library
 
+
+        holder.overflow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(holder.overflow);
+            }
+        });
+    }
+
+    /**
+     * Showing popup menu when tapping on 3 dots
+     */
+    private void showPopupMenu(View view) {
+        // inflate menu
+        PopupMenu popup = new PopupMenu(mContext, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_item, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.show();
+    }
+
+    /**
+     * Click listener for popup menu items
+     */
+    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        public MyMenuItemClickListener() {
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.menu_item_append:
+
+
+                    return true;
+                case R.id.menu_item_details:
+
+                    return true;
+                default:
+            }
+            return false;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return restaurantlist.size();
+        return hotelList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-
-        public CardView cardView;
-        public ImageView imageView;
-        public TextView nameView;
-        public TextView descriptionView;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            cardView = itemView.findViewById(R.id.restaurant_item_cardview);
-            imageView = itemView.findViewById(R.id.restaurant_item_imageview);
-            nameView = itemView.findViewById(R.id.restaurant_item_name);
-            descriptionView = itemView.findViewById(R.id.restaurant_item_description);
+    private void SharedElementTransition(){
 
 
-        }
     }
 }

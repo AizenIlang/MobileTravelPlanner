@@ -3,7 +3,10 @@
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundDark"
+    android:clipToPadding="false"
+    >
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -30,34 +33,54 @@ xmlns:tools="http://schemas.android.com/tools"
 
     <TextView
         android:id="@+id/hotel_add_name"
-        android:layout_width="340dp"
-        android:layout_height="41dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_centerVertical="true"
         android:fontFamily="cursive"
         android:text="Hacking Mt. Peligro"
+        android:layout_marginBottom="30dp"
+        android:textAlignment="center"
+        android:elegantTextHeight="true"
+        android:elevation="5dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorAccent"
         android:textSize="36sp"
-
-        tools:layout_editor_absoluteX="28dp"
-        tools:layout_editor_absoluteY="189dp"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/hotel_add_details" />
+        />
 
     <ImageView
         android:id="@+id/hotel_add_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/backgroundDark" />
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:background="@color/backgroundDark"
+        android:transitionName="hotelImage"
+        android:elevation="5dp"/>
 
     <Button
         android:id="@+id/hotel_add_roombtn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/cardView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:elevation="5dp"
+        android:text="Avail Room"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/hotel_add_company"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:text="Rooms"
-        android:layout_below="@+id/cardView2"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/cardView2"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="serif-monospace"
+        android:text="company"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="24sp" />
 
 </RelativeLayout>

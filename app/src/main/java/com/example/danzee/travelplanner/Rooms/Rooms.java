@@ -1,6 +1,9 @@
 package com.example.danzee.travelplanner.Rooms;
 
+import android.net.Uri;
+
 import com.example.danzee.travelplanner.Booking.Booking;
+import com.google.firebase.database.Exclude;
 
 /**
  * Created by DanZee on 03/08/2017.
@@ -14,6 +17,9 @@ public class Rooms {
     private String sTotalCost;
     private double TotalCost;
     private String PhotoURL;
+
+    @Exclude
+    public Uri myUri;
 
     private String Size;
 

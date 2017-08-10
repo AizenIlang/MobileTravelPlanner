@@ -84,8 +84,8 @@ public class AdminRoom extends AppCompatActivity {
     }
 
     private void initPage() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("ADMIN Room List");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle("ADMIN Room List");
         getHotelNames();
         imageAttach = (ImageView) findViewById(R.id.admin_room_image_view);
         imageContainer = (FrameLayout) findViewById(R.id.admin_room_imageContainer);
@@ -250,11 +250,9 @@ public class AdminRoom extends AppCompatActivity {
 
         databaseReference.setValue(value);
 
-        DatabaseReference databaseReferenceForHotelRooms = firebaseDatabase.getReference().child("HotelRooms").child(hotelkey);
-        HotelRooms tempHotelRooms = new HotelRooms();
-        tempHotelRooms.setHotelKey(hotelkey);
-        tempHotelRooms.setRoomKey(key);
-        databaseReferenceForHotelRooms.setValue(tempHotelRooms);
+        DatabaseReference databaseReferenceForHotelRooms = firebaseDatabase.getReference().child("HotelRooms").child(hotelkey).push();
+
+        databaseReferenceForHotelRooms.setValue(value);
 
     }
 

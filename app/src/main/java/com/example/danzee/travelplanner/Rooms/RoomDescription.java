@@ -1,4 +1,4 @@
-package com.example.danzee.travelplanner.Activities;
+package com.example.danzee.travelplanner.Rooms;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.R;
@@ -24,7 +23,7 @@ import com.squareup.picasso.Picasso;
  */
 
 
-public class ActivitiesDescription extends AppCompatActivity {
+public class RoomDescription extends AppCompatActivity {
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -47,7 +46,7 @@ public class ActivitiesDescription extends AppCompatActivity {
     }
 
     private void initPage(){
-        Activities hotel = ActivitiesList.selection;
+        Rooms hotel = RoomList.selection;
         roomName = hotel.getName();
         hotelAddImageView = (ImageView) findViewById(R.id.hotel_add_imageview);
         hotelAddDescription = (TextView) findViewById(R.id.hotel_add_details);
@@ -57,19 +56,19 @@ public class ActivitiesDescription extends AppCompatActivity {
         hotelAddName.setText(hotel.getName());
         hotelAddCompany.setText(hotel.getsTotalCost());
         hotelBtn = (Button) findViewById(R.id.hotel_add_roombtn);
-        hotelBtn.setText("Register Activity");
+        hotelBtn.setText("Book");
         hotelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(RoomDescription.this, RoomList.class));
-                Toast.makeText(getApplicationContext(),roomName + "Resgistered", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),HotelList.selection.getName() + " " + roomName + "Booked", Toast.LENGTH_LONG).show();
             }
         });
-        Glide.with(this).load(hotel.myUri).into(hotelAddImageView);
-//        Picasso.with(this)
-//                .load(hotel.myUri)
-//
-//                .into(hotelAddImageView);
+        //Glide.with(this).load(hotel.myUri).into(hotelAddImageView);
+        Picasso.with(this)
+                        .load(hotel.myUri)
+
+                        .into(hotelAddImageView);
 
     }
 }

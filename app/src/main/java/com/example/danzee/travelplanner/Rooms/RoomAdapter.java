@@ -1,4 +1,4 @@
-package com.example.danzee.travelplanner.Activities;
+package com.example.danzee.travelplanner.Rooms;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -23,8 +23,6 @@ import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelDescription;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.R;
-import com.example.danzee.travelplanner.Restaurant.Restaurant;
-import com.example.danzee.travelplanner.Restaurant.RestaurantList;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -32,10 +30,11 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.MyViewHolder> {
+
+public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private Context mContext;
-    private List<Activities> hotelList;
+    private List<Rooms> hotelList;
     private Activity mActivity;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -52,7 +51,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
     }
 
 
-    public ActivitiesAdapter(Context mContext, List<Activities> albumList,Activity mActivity) {
+    public RoomAdapter(Context mContext, List<Rooms> albumList, Activity mActivity) {
         this.mContext = mContext;
         this.hotelList = albumList;
         this.mActivity = mActivity;
@@ -68,17 +67,17 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final Activities hotel = hotelList.get(position);
+        final Rooms hotel = hotelList.get(position);
         holder.name.setText(hotel.getName());
-        holder.company.setText(hotel.getCompany());
+        holder.company.setText("Max Person " + hotel.getSize());
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivitiesList.selection = hotel;
+                RoomList.selection = hotel;
                 View mySharedElement = view.findViewById(R.id.booking_add_hotel_imageview);
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity,mySharedElement,"hotelImage");
-                Intent i = new Intent(mContext, ActivitiesDescription.class);
+                Intent i = new Intent(mContext, RoomDescription.class);
                 mContext.startActivity(i,options.toBundle());
 
             }

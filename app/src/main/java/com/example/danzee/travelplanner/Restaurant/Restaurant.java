@@ -1,5 +1,9 @@
 package com.example.danzee.travelplanner.Restaurant;
 
+import android.net.Uri;
+
+import com.google.firebase.database.Exclude;
+
 /**
  * Created by DanZee on 08/08/2017.
  */
@@ -14,6 +18,9 @@ public class Restaurant {
     private String Location1;
     private String Location2;
     private String Group;
+
+    @Exclude
+    public Uri myUri;
 
     public Restaurant(){
 

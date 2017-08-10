@@ -1,4 +1,4 @@
-package com.example.danzee.travelplanner.Activities;
+package com.example.danzee.travelplanner;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -22,9 +22,6 @@ import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelDescription;
 import com.example.danzee.travelplanner.Hotel.HotelList;
-import com.example.danzee.travelplanner.R;
-import com.example.danzee.travelplanner.Restaurant.Restaurant;
-import com.example.danzee.travelplanner.Restaurant.RestaurantList;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -32,10 +29,13 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.MyViewHolder> {
+/**
+ * Created by Ravi Tamada on 18/05/16.
+ */
+public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyViewHolder> {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private Context mContext;
-    private List<Activities> hotelList;
+    private List<Hotel> hotelList;
     private Activity mActivity;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -52,7 +52,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
     }
 
 
-    public ActivitiesAdapter(Context mContext, List<Activities> albumList,Activity mActivity) {
+    public ListItemAdapter(Context mContext, List<Hotel> albumList,Activity mActivity) {
         this.mContext = mContext;
         this.hotelList = albumList;
         this.mActivity = mActivity;
@@ -68,17 +68,17 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final Activities hotel = hotelList.get(position);
+        final Hotel hotel = hotelList.get(position);
         holder.name.setText(hotel.getName());
         holder.company.setText(hotel.getCompany());
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivitiesList.selection = hotel;
+                HotelList.selection = hotel;
                 View mySharedElement = view.findViewById(R.id.booking_add_hotel_imageview);
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity,mySharedElement,"hotelImage");
-                Intent i = new Intent(mContext, ActivitiesDescription.class);
+                Intent i = new Intent(mContext, HotelDescription.class);
                 mContext.startActivity(i,options.toBundle());
 
             }
@@ -101,6 +101,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
                 }catch (Exception e){
                     Log.e("Logger",e.getMessage());
                 }
+
 
             }
         }).addOnFailureListener(new OnFailureListener() {

@@ -1,7 +1,10 @@
 package com.example.danzee.travelplanner.Hotel;
 
+import android.net.Uri;
+
 import com.example.danzee.travelplanner.Booking.Booking;
 import com.example.danzee.travelplanner.Rooms.Rooms;
+import com.google.firebase.database.Exclude;
 
 /**
  * Created by DanZee on 03/08/2017.
@@ -17,6 +20,9 @@ public class Hotel {
     private String Location2;
     private Rooms Rooms;
     private String Group;
+
+    @Exclude
+    public Uri myUri;
 
     public String getID() {
         return ID;

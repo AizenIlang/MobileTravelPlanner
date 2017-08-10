@@ -120,13 +120,13 @@
             tools:layout_editor_absoluteX="111dp"
             tools:layout_editor_absoluteY="157dp" />
 
-        <TextView
-            android:layout_width="122dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="CLICK HERE TO UPLOAD IMAGE"
-            android:textAlignment="center"
-            android:textColor="@color/font_color_light_gray" />
+        <!--<TextView-->
+            <!--android:layout_width="122dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="CLICK HERE TO UPLOAD IMAGE"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textColor="@color/font_color_light_gray" />-->
 
     </FrameLayout>
 

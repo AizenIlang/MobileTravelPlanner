@@ -55,13 +55,13 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
 
         holder.nameView.setText(tempHotel.getName());
         holder.descriptionView.setText(tempHotel.getDetails());
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HotelList.selection = tempHotel;
-                view.getContext().startActivity(new Intent(view.getContext(),HotelDescription.class));
-            }
-        });
+//        holder.cardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                HotelList.selection = tempHotel;
+//                view.getContext().startActivity(new Intent(view.getContext(),HotelDescription.class));
+//            }
+//        });
         // Create a storage reference from our app
 
         StorageReference storageRef = storage.getReference();

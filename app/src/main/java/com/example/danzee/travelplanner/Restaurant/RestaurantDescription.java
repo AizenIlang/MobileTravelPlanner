@@ -1,32 +1,40 @@
 package com.example.danzee.travelplanner.Restaurant;
 
 import android.content.Context;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+/**
+ * Created by DanZee on 08/08/2017.
+ */
+
 
 public class RestaurantDescription extends AppCompatActivity {
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private ImageView restaurantAddImageView;
-    private TextView restaurantAddName;
-    private TextView restaurantAddDescription;
+    private ImageView hotelAddImageView;
+    private TextView hotelAddName;
+    private TextView hotelAddDescription;
+    private TextView hotelAddCompany;
     private Context context;
+    private Button hotelBtn;
+    private String roomName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,44 +42,34 @@ public class RestaurantDescription extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         context = this.getApplicationContext();
-
-
-        setContentView(R.layout.activity_restaurant_description);
+        setContentView(R.layout.hotel_add);
         initPage();
     }
 
     private void initPage(){
-        Restaurant restaurant = RestaurantList.selected;
-        restaurantAddImageView = (ImageView) findViewById(R.id.restaurant_add_imageview);
-        restaurantAddDescription = (TextView) findViewById(R.id.restaurant_add_details);
-        restaurantAddName = (TextView) findViewById(R.id.restaurant_add_name);
-
-        restaurantAddDescription.setText(restaurant.getDetails());
-        restaurantAddName.setText(restaurant.getName());
-
-        StorageReference storageRef = storage.getReference();
-
-// Create a reference with an initial file path and name
-        String path = restaurant.getPhotoUrl();
-//        StorageReference pathReference = storageRef.child(path);
-
-        storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        Restaurant hotel = RestaurantList.selection;
+        roomName = hotel.getName();
+        hotelAddImageView = (ImageView) findViewById(R.id.hotel_add_imageview);
+        hotelAddDescription = (TextView) findViewById(R.id.hotel_add_details);
+        hotelAddName = (TextView) findViewById(R.id.hotel_add_name);
+        hotelAddCompany = (TextView) findViewById(R.id.hotel_add_company);
+        hotelAddDescription.setText(hotel.getDetails());
+        hotelAddName.setText(hotel.getName());
+        hotelAddCompany.setText(hotel.getsPrice());
+        hotelBtn = (Button) findViewById(R.id.hotel_add_roombtn);
+        hotelBtn.setText("Reserve");
+        hotelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Uri uri) {
-                // Got the download URL for 'users/me/profile.png'
-                Picasso.with(context)
-                        .load(uri)
-                        .resize(1050,540)
-                        .centerCrop()
-                        .into(restaurantAddImageView);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+            public void onClick(View view) {
+//                startActivity(new Intent(RoomDescription.this, RoomList.class));
+                Toast.makeText(getApplicationContext(),roomName + "Reserved", Toast.LENGTH_LONG).show();
             }
         });
+        Glide.with(this).load(hotel.myUri).into(hotelAddImageView);
+//        Picasso.with(this)
+//                .load(hotel.myUri)
+//
+//                .into(hotelAddImageView);
+
     }
-
-
 }
