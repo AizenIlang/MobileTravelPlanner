@@ -11,6 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBgvgW4onjBoCKtZ0HHxIBaVJFcmZdqcDI" />
+
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,9 +37,11 @@
         <activity android:name=".Restaurant.RestaurantDescription" />
         <activity android:name=".Restaurant.RestaurantList" />
         <activity android:name=".Activities.ActivitiesList" />
-        <activity android:name=".Activities.ActivitiesDescription"></activity>
-        <activity android:name=".Rooms.RoomList"></activity>
-        <activity android:name=".Rooms.RoomDescription"></activity>
+        <activity android:name=".Activities.ActivitiesDescription" />
+        <activity android:name=".Rooms.RoomList" />
+        <activity android:name=".Rooms.RoomDescription" />
+        <activity android:name=".MarkerDemoActivity" />
+        <activity android:name=".Booking.BookingList"></activity>
     </application>
 
 </manifest>

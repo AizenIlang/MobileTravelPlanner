@@ -11,18 +11,39 @@ import com.google.firebase.database.Exclude;
  */
 
 public class Hotel {
+    @Exclude
     private String ID;
+
     private String Name;
     private String Company;
     private String Details;
     private String PhotoURL;
     private String Location1;
     private String Location2;
+    private double AveragePrice;
     private Rooms Rooms;
+    private int Rating;
     private String Group;
+
 
     @Exclude
     public Uri myUri;
+
+    public int getRating() {
+        return Rating;
+    }
+
+    public void setRating(int rating) {
+        Rating = rating;
+    }
+
+    public double getAveragePrice() {
+        return AveragePrice;
+    }
+
+    public void setAveragePrice(double averagePrice) {
+        AveragePrice = averagePrice;
+    }
 
     public String getID() {
         return ID;

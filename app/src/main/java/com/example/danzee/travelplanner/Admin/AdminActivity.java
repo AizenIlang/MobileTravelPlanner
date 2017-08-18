@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.example.danzee.travelplanner.Activities.Activities;
-import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -74,7 +73,7 @@ public class AdminActivity extends AppCompatActivity {
         Price = (EditText) findViewById(R.id.admin_activity_price);
         CompanyName = (EditText) findViewById(R.id.admin_activity_company);
         Details = (EditText) findViewById(R.id.admin_activity_details);
-        MapCoordinates = (EditText) findViewById(R.id.admin_activity_map);
+        MapCoordinates = (EditText) findViewById(R.id.admin_activity_location1);
         imageContainer = (FrameLayout) findViewById(R.id.admin_activity_imageContainer);
         imageView = (ImageView) findViewById(R.id.admin_activity_image_view);
         activityaddBtn = (Button) findViewById(R.id.admin_activity_add_btn);

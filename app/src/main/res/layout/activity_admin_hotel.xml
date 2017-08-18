@@ -66,18 +66,14 @@
         android:id="@+id/admin_hotel_details"
         android:layout_width="218dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:hint="Details"
         android:inputType="textPersonName"
         android:textSize="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/admin_hotel_location1"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        tools:layout_editor_absoluteX="83dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/admin_hotel_average_price" />
 
     <EditText
         android:id="@+id/admin_hotel_location1"
@@ -169,6 +165,21 @@
         app:layout_constraintBottom_toTopOf="@+id/admin_hotels_spinner"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/admin_hotel_average_price"
+        android:layout_width="218dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Average Price"
+        android:inputType="numberDecimal"
+        android:textSize="12dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/admin_hotel_location1" />
 
 
 </android.support.constraint.ConstraintLayout>

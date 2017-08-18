@@ -18,12 +18,21 @@ public class Restaurant {
     private String Location1;
     private String Location2;
     private String Group;
+    private int Rating;
 
     @Exclude
     public Uri myUri;
 
     public Restaurant(){
 
+    }
+
+    public int getRating() {
+        return Rating;
+    }
+
+    public void setRating(int rating) {
+        Rating = rating;
     }
 
     public String getName() {

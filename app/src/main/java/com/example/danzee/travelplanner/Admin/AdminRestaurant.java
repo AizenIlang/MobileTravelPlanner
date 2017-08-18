@@ -22,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
-import com.example.danzee.travelplanner.Activities.Activities;
-import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.R;
 import com.example.danzee.travelplanner.Restaurant.Restaurant;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -53,6 +51,7 @@ public class AdminRestaurant extends AppCompatActivity {
     private String PhotoUrl;
     private EditText Details;
     private EditText MapCoordinates;
+    private EditText MapCoordinates2;
     private Spinner Group;
     private ImageView imageView;
     private FrameLayout imageContainer;
@@ -75,7 +74,8 @@ public class AdminRestaurant extends AppCompatActivity {
         Price = (EditText) findViewById(R.id.admin_restaurant_price);
         Company = (EditText) findViewById(R.id.admin_restuarant_company);
         Details = (EditText) findViewById(R.id.admin_restaurant_details);
-        MapCoordinates = (EditText) findViewById(R.id.admin_restaurant_map);
+        MapCoordinates = (EditText) findViewById(R.id.admin_restaurant_location1);
+        MapCoordinates2 = (EditText) findViewById(R.id.admin_restaurant_location2);
         Group = (Spinner) findViewById(R.id.admin_restaurant_spinner);
         imageView = (ImageView) findViewById(R.id.admin_restaurant_image_view);
         imageContainer = (FrameLayout) findViewById(R.id.admin_restaurant_imageContainer);
@@ -132,6 +132,7 @@ public class AdminRestaurant extends AppCompatActivity {
             tempRestaurant.setDetails(Details.getText().toString());
             tempRestaurant.setGroup(Group.getSelectedItem().toString());
             tempRestaurant.setLocation1(MapCoordinates.getText().toString());
+            tempRestaurant.setLocation2(MapCoordinates2.getText().toString());
 
             tempRestaurant.setPhotoUrl(path);
 

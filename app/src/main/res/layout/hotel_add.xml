@@ -8,29 +8,6 @@ xmlns:tools="http://schemas.android.com/tools"
     android:clipToPadding="false"
     >
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/hotel_add_name"
-        android:layout_marginTop="24dp"
-        android:layout_margin="10dp"
-        app:cardElevation="5dp"
-        android:id="@+id/cardView2">
-
-        <TextView
-            android:id="@+id/hotel_add_details"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_below="@+id/hotel_add_name"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="21dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam elit augue, tempor at varius id, porta ut magna. Nulla at viverra purus. Donec leo risus, efficitur et metus vel, iaculis faucibus mauris. Pellentesque quis mauris ligula."
-            android:textAlignment="textStart" />
-    </android.support.v7.widget.CardView>
-
     <TextView
         android:id="@+id/hotel_add_name"
         android:layout_width="match_parent"
@@ -56,31 +33,72 @@ xmlns:tools="http://schemas.android.com/tools"
         android:adjustViewBounds="true"
         android:background="@color/backgroundDark"
         android:transitionName="hotelImage"
-        android:elevation="5dp"/>
+        android:elevation="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/hotel_add_name"
+        android:layout_marginTop="24dp"
+        android:layout_margin="10dp"
+        app:cardElevation="5dp"
+        android:id="@+id/cardView2">
+        <ScrollView
+            android:id="@+id/hotel_add_scrview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hotel_add_name">
+        <TextView
+            android:id="@+id/hotel_add_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hotel_add_name"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam elit augue, tempor at varius id, porta ut magna. Nulla at viverra purus. Donec leo risus, efficitur et metus vel, iaculis faucibus mauris. Pellentesque quis mauris ligula."
+            android:textAlignment="textStart" />
+        </ScrollView>
+    </android.support.v7.widget.CardView>
+
+
+
+
 
     <Button
         android:id="@+id/hotel_add_roombtn"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@+id/cardView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
         android:elevation="5dp"
         android:text="Avail Room"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_below="@+id/cardView2"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/hotel_add_company"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/cardView2"
-        android:layout_centerHorizontal="true"
         android:fontFamily="serif-monospace"
         android:text="company"
         android:textAlignment="center"
         android:textColor="@android:color/holo_blue_light"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:layout_above="@+id/cardView2"
+        android:layout_alignStart="@+id/cardView2" />
+
+    <TextView
+        android:id="@+id/hotel_description_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/cardView2"
+        android:layout_alignStart="@+id/hotel_add_company"
+        android:layout_marginStart="17dp"
+        android:text="PHP 500.00"
+        android:textColor="?attr/colorBackgroundFloating" />
 
 </RelativeLayout>

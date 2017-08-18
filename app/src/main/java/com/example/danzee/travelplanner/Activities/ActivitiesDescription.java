@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
+import com.example.danzee.travelplanner.MainActivity;
 import com.example.danzee.travelplanner.R;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,7 +48,7 @@ public class ActivitiesDescription extends AppCompatActivity {
     }
 
     private void initPage(){
-        Activities hotel = ActivitiesList.selection;
+        final Activities hotel = ActivitiesList.selection;
         roomName = hotel.getName();
         hotelAddImageView = (ImageView) findViewById(R.id.hotel_add_imageview);
         hotelAddDescription = (TextView) findViewById(R.id.hotel_add_details);
@@ -62,6 +63,8 @@ public class ActivitiesDescription extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(RoomDescription.this, RoomList.class));
+                MainActivity.theChosenActivities = hotel;
+
                 Toast.makeText(getApplicationContext(),roomName + "Resgistered", Toast.LENGTH_LONG).show();
             }
         });

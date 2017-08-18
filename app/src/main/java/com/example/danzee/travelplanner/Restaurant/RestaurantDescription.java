@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
+import com.example.danzee.travelplanner.MainActivity;
 import com.example.danzee.travelplanner.R;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,7 +48,7 @@ public class RestaurantDescription extends AppCompatActivity {
     }
 
     private void initPage(){
-        Restaurant hotel = RestaurantList.selection;
+        final Restaurant hotel = RestaurantList.selection;
         roomName = hotel.getName();
         hotelAddImageView = (ImageView) findViewById(R.id.hotel_add_imageview);
         hotelAddDescription = (TextView) findViewById(R.id.hotel_add_details);
@@ -61,6 +62,9 @@ public class RestaurantDescription extends AppCompatActivity {
         hotelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                MainActivity.theChosenRestaurant = hotel;
+
 //                startActivity(new Intent(RoomDescription.this, RoomList.class));
                 Toast.makeText(getApplicationContext(),roomName + "Reserved", Toast.LENGTH_LONG).show();
             }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
+import com.example.danzee.travelplanner.MainActivity;
 import com.example.danzee.travelplanner.R;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -34,6 +35,7 @@ public class RoomDescription extends AppCompatActivity {
     private Context context;
     private Button hotelBtn;
     private String roomName;
+    private TextView hotelPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +48,14 @@ public class RoomDescription extends AppCompatActivity {
     }
 
     private void initPage(){
-        Rooms hotel = RoomList.selection;
+        final Rooms hotel = RoomList.selection;
         roomName = hotel.getName();
         hotelAddImageView = (ImageView) findViewById(R.id.hotel_add_imageview);
         hotelAddDescription = (TextView) findViewById(R.id.hotel_add_details);
         hotelAddName = (TextView) findViewById(R.id.hotel_add_name);
         hotelAddCompany = (TextView) findViewById(R.id.hotel_add_company);
+        hotelPrice = (TextView) findViewById(R.id.hotel_description_price);
+        hotelPrice.setVisibility(View.GONE);
         hotelAddDescription.setText(hotel.getDetails());
         hotelAddName.setText(hotel.getName());
         hotelAddCompany.setText(hotel.getsTotalCost());
@@ -61,6 +65,10 @@ public class RoomDescription extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(RoomDescription.this, RoomList.class));
+                MainActivity.theChosenRoom = hotel;
+                MainActivity.theChosenHotel = HotelList.selection;
+
+
                 Toast.makeText(getApplicationContext(),HotelList.selection.getName() + " " + roomName + "Booked", Toast.LENGTH_LONG).show();
             }
         });

@@ -50,6 +50,7 @@ public class AdminHotel extends AppCompatActivity {
     EditText Details;
     EditText Location1;
     EditText Location2;
+    EditText AveragePrice;
     Spinner Group;
     Button addHotel;
     ProgressBar progressBar;
@@ -111,6 +112,7 @@ public class AdminHotel extends AppCompatActivity {
             tempHotel.setGroup(Group.getSelectedItem().toString());
             tempHotel.setLocation1(Location1.getText().toString());
             tempHotel.setLocation2(Location2.getText().toString());
+            tempHotel.setAveragePrice(Double.parseDouble(AveragePrice.getText().toString()));
             tempHotel.setPhotoURL(path);
 
 
@@ -205,8 +207,8 @@ public class AdminHotel extends AppCompatActivity {
 
 
     private void initPage() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("ADMIN Hotel List");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle("ADMIN Hotel List");
         imageAttach = (ImageView) findViewById(R.id.admin_hotels_image_view);
         imageContainer = (FrameLayout) findViewById(R.id.admin_hotels_imageContainer);
 
@@ -220,6 +222,7 @@ public class AdminHotel extends AppCompatActivity {
         Group = (Spinner) findViewById(R.id.admin_hotels_spinner);
         progressBar = (ProgressBar) findViewById(R.id.admin_hotels_progress_bar);
         parentView = (ConstraintLayout) findViewById(R.id.admin_hotels_parentview);
+        AveragePrice = (EditText) findViewById(R.id.admin_hotel_average_price);
 
         imageAttach.setOnClickListener(new ImageUploadListener());
 

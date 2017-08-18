@@ -67,7 +67,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Hotel hotel = hotelList.get(position);
         holder.name.setText(hotel.getName());
         holder.company.setText(hotel.getCompany());
@@ -76,6 +76,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
             @Override
             public void onClick(View view) {
                 HotelList.selection = hotel;
+                MainActivity.MapPick = MainActivity.HOTEL;
                 View mySharedElement = view.findViewById(R.id.booking_add_hotel_imageview);
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity,mySharedElement,"hotelImage");
                 Intent i = new Intent(mContext, HotelDescription.class);
@@ -116,7 +117,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder.overflow);
+                showPopupMenu(holder.overflow,position);
             }
         });
     }
@@ -124,12 +125,12 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
     /**
      * Showing popup menu when tapping on 3 dots
      */
-    private void showPopupMenu(View view) {
+    private void showPopupMenu(View view,int MyPosition) {
         // inflate menu
         PopupMenu popup = new PopupMenu(mContext, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_item, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(MyPosition));
         popup.show();
     }
 
@@ -138,14 +139,22 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
      */
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
+        Hotel myHotelClicked;
+
         public MyMenuItemClickListener() {
+        }
+
+        public MyMenuItemClickListener(int MyPosition){
+            myHotelClicked = hotelList.get(MyPosition);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_append:
-
+                    MainActivity.MapPick = MainActivity.HOTEL;
+                    HotelList.selection = myHotelClicked;
+                    mContext.startActivity(new Intent(mContext,MarkerDemoActivity.class));
 
                     return true;
                 case R.id.menu_item_details:
@@ -156,6 +165,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
             return false;
         }
     }
+
+
 
     @Override
     public int getItemCount() {

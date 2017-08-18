@@ -113,8 +113,11 @@ public class RoomList extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Rooms tempHotel = dataSnapshot.getValue(Rooms.class);
-                tempHotel.setID(dataSnapshot.getKey());
-                hotelList.add(tempHotel);
+                if (tempHotel != null) {
+                    tempHotel.setID(dataSnapshot.getKey());
+                    hotelList.add(tempHotel);
+                }
+
             }
 
             @Override
@@ -154,13 +157,13 @@ public class RoomList extends AppCompatActivity {
     /**
      * RecyclerView item decoration - give equal margin around grid item
      */
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+    private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         private int spanCount;
         private int spacing;
         private boolean includeEdge;
 
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+        GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
             this.spanCount = spanCount;
             this.spacing = spacing;
             this.includeEdge = includeEdge;

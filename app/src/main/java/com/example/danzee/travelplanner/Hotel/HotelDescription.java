@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,6 +17,8 @@ import com.example.danzee.travelplanner.Rooms.RoomList;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
+
+import java.text.DecimalFormat;
 
 /**
  * Created by DanZee on 08/08/2017.
@@ -30,6 +33,7 @@ public class HotelDescription extends AppCompatActivity {
     private TextView hotelAddName;
     private TextView hotelAddDescription;
     private TextView hotelAddCompany;
+    private TextView hotelPrice;
     private Context context;
     private Button hotelBtn;
 
@@ -50,12 +54,15 @@ public class HotelDescription extends AppCompatActivity {
         hotelAddName = (TextView) findViewById(R.id.hotel_add_name);
         hotelAddCompany = (TextView) findViewById(R.id.hotel_add_company);
         hotelAddDescription.setText(hotel.getDetails());
+        hotelPrice = (TextView) findViewById(R.id.hotel_description_price);
+        hotelPrice.setText(YouwillBedeductedStringBuilder(hotel.getAveragePrice()));
         hotelAddName.setText(hotel.getName());
         hotelAddCompany.setText(hotel.getCompany());
         hotelBtn = (Button) findViewById(R.id.hotel_add_roombtn);
         hotelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("The Hotel ID", HotelList.selection.getID());
                 startActivity(new Intent(HotelDescription.this, RoomList.class));
             }
         });
@@ -65,5 +72,10 @@ public class HotelDescription extends AppCompatActivity {
 //
 //                        .into(hotelAddImageView);
 
+    }
+
+    private String YouwillBedeductedStringBuilder(Double value){
+        String returnValue = new DecimalFormat("P#,###.##").format(value) + ".00";
+        return returnValue;
     }
 }

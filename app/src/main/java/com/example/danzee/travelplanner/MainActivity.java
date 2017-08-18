@@ -17,10 +17,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.danzee.travelplanner.Activities.Activities;
 import com.example.danzee.travelplanner.Activities.ActivitiesList;
 import com.example.danzee.travelplanner.Admin.Admin;
+import com.example.danzee.travelplanner.Booking.Booking;
+import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
+import com.example.danzee.travelplanner.Restaurant.Restaurant;
 import com.example.danzee.travelplanner.Restaurant.RestaurantList;
+import com.example.danzee.travelplanner.Rooms.Rooms;
 import com.example.danzee.travelplanner.User.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +34,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,6 +51,60 @@ public class MainActivity extends AppCompatActivity
     private Menu navMenu;
     private MenuItem menuItemAdmin;
 
+    public static String MapPick;
+    public static final String HOTEL = "HOTEL";
+    public static final String RESTAURANT ="RESTAURANT";
+    public static final String ACTIVITY = "ACTIVITY";
+
+    //FOR BOOKINGS
+
+    public TextView mChosen_Hotel_Name;
+    public TextView mChosen_Hotel_Price;
+    public TextView mChosen_Activity_Name;
+    public TextView mChosen_Activity_Price;
+    public TextView mChosen_Dining_Name;
+    public TextView mChosen_Dining_Price;
+    public TextView mChosen_Total_Price;
+
+    public static Hotel theChosenHotel;
+    public static Restaurant theChosenRestaurant;
+    public static Rooms theChosenRoom;
+    public static Activities theChosenActivities;
+
+
+
+    public void ResetText(){
+        double myCost = 0;
+        if(theChosenHotel != null){
+            mChosen_Hotel_Name.setText(theChosenHotel.getName());
+            mChosen_Hotel_Price.setText(YouwillBedeductedStringBuilder(theChosenRoom.getTotalCost()));
+            myCost += theChosenRoom.getTotalCost();
+        }
+
+        if(theChosenRestaurant != null){
+            mChosen_Dining_Name.setText(theChosenRestaurant.getName());
+            mChosen_Dining_Price.setText(YouwillBedeductedStringBuilder(theChosenRestaurant.getPrice()));
+            myCost += theChosenRestaurant.getPrice();
+        }
+
+        if(theChosenActivities != null){
+            mChosen_Activity_Name.setText(theChosenActivities.getName());
+            mChosen_Activity_Price.setText(YouwillBedeductedStringBuilder(theChosenActivities.getTotalCost()));
+            myCost += theChosenActivities.getTotalCost();
+        }
+        TotalMake(myCost);
+    }
+
+    public void TotalMake(double val){
+        mChosen_Total_Price.setText(YouwillBedeductedStringBuilder(val));
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ResetText();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +211,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_travels) {
-            // Handle the camera action
+            startActivity(new Intent(MainActivity.this, Booking.class));
         } else if (id == R.id.nav_admin) {
             startActivity(new Intent(MainActivity.this, Admin.class));
 
@@ -182,6 +243,15 @@ public class MainActivity extends AppCompatActivity
         Button activityAddButton = (Button) findViewById(R.id.booking_add_ActivityBtn);
         Button restaurantAddButton = (Button) findViewById(R.id.booking_add_RestaurantBtn);
 
+        mChosen_Hotel_Name = (TextView) findViewById(R.id.chosen_hotel_name);
+        mChosen_Hotel_Price = (TextView) findViewById(R.id.chosen_hotel_price);
+        mChosen_Dining_Name = (TextView) findViewById(R.id.chosen_dining_name);
+        mChosen_Dining_Price = (TextView) findViewById(R.id.chosen_dining_price);
+        mChosen_Activity_Name = (TextView) findViewById(R.id.chosen_activity_name);
+        mChosen_Activity_Price = (TextView) findViewById(R.id.chosen_activity_price);
+        mChosen_Total_Price = (TextView) findViewById(R.id.chosen_total_cost);
+
+
         hotelAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,5 +279,10 @@ public class MainActivity extends AppCompatActivity
         Intent i = new Intent(MainActivity.this, HotelList.class);
         startActivity(i,options.toBundle());
 
+    }
+
+    private String YouwillBedeductedStringBuilder(Double value){
+        String returnValue = new DecimalFormat("P#,###.##").format(value) + ".00";
+        return returnValue;
     }
 }

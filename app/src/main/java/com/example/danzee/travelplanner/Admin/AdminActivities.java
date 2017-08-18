@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -74,7 +73,7 @@ public class AdminActivities extends AppCompatActivity {
         Price = (EditText) findViewById(R.id.admin_activity_price);
         CompanyName = (EditText) findViewById(R.id.admin_activity_company);
         Details = (EditText) findViewById(R.id.admin_activity_details);
-        MapCoordinates = (EditText) findViewById(R.id.admin_activity_map);
+        MapCoordinates = (EditText) findViewById(R.id.admin_activity_location1);
         imageContainer = (FrameLayout) findViewById(R.id.admin_activity_imageContainer);
         imageView = (ImageView) findViewById(R.id.admin_activity_image_view);
         activityaddBtn = (Button) findViewById(R.id.admin_activity_add_btn);

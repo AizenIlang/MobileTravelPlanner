@@ -110,6 +110,19 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             />
     </LinearLayout>
-    <include layout="@layout/content_hotel_list" />
+    <include layout="@layout/content_hotel_list"
+        android:id="@+id/include" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/hotel_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="top|center_horizontal"
+        app:srcCompat="@android:drawable/ic_menu_search" />
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -4,20 +4,25 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.ListItemAdapter;
 import com.example.danzee.travelplanner.R;
 import com.google.firebase.database.ChildEventListener;
@@ -28,6 +33,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ActivitiesList extends AppCompatActivity {
@@ -38,6 +45,10 @@ public class ActivitiesList extends AppCompatActivity {
     private ActivitiesAdapter adapter;
     private List<Activities> hotelList;
     public static Activities selection;
+    public FloatingActionButton fab;
+    public LinearLayout sortAtoZ;
+    public LinearLayout sortPrice;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +58,39 @@ public class ActivitiesList extends AppCompatActivity {
         this.setTitle("Hotels");
         initCollapsingToolbar();
 
+        fab = (FloatingActionButton) findViewById(R.id.hotel_fab);
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.bootom_persistent_sheet,null);
+        bottomSheetDialog.setContentView(bottomSheetView);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.show();
+            }
+        });
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         hotelList = new ArrayList<>();
         adapter = new ActivitiesAdapter(this, hotelList,this);
+
+        sortAtoZ = bottomSheetView.findViewById(R.id.bottom_sheet_sort_az);
+        sortPrice = bottomSheetView.findViewById(R.id.bottom_sheet_sort_price);
+
+        sortAtoZ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SortByAZ();
+            }
+        });
+
+        sortPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SortByPrice();
+            }
+        });
 
         Button coron = (Button) findViewById(R.id.booking_add_hotel_coron_btn);
         Button elnido = (Button) findViewById(R.id.booking_add_hotel_elnido_btn);
@@ -267,7 +307,7 @@ public class ActivitiesList extends AppCompatActivity {
     public void populateListPuerto()
     {
         hotelList.clear();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Activity").child("PUERTO");
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Activity").child("PUERTO PRINCESSA");
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -353,5 +393,32 @@ public class ActivitiesList extends AppCompatActivity {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    private void SortByAZ(){
+//        Collections.sort(hotelList, new Comparator<Hotel>() {
+//            @Override
+//            public int compare(Hotel hotel, Hotel t1) {
+//                return hotel.getName().compareTo(t1.getName());
+//            }
+//
+//
+//        });
+        Collections.reverse(hotelList);
+        recyclerView.setAdapter(adapter);
+        Log.e("Hotel","Sort by AZ");
+    }
+
+    private void SortByPrice(){
+        Collections.sort(hotelList, new Comparator<Activities>() {
+            @Override
+            public int compare(Activities activities, Activities t1) {
+                return Double.compare(activities.getTotalCost(),t1.getTotalCost());
+            }
+
+
+        });
+
+        recyclerView.setAdapter(adapter);
     }
 }

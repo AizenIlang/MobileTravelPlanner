@@ -22,6 +22,8 @@ import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelDescription;
 import com.example.danzee.travelplanner.Hotel.HotelList;
+import com.example.danzee.travelplanner.MainActivity;
+import com.example.danzee.travelplanner.MarkerDemoActivity;
 import com.example.danzee.travelplanner.R;
 import com.example.danzee.travelplanner.Restaurant.Restaurant;
 import com.example.danzee.travelplanner.Restaurant.RestaurantList;
@@ -67,7 +69,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Restaurant hotel = hotelList.get(position);
         holder.name.setText(hotel.getName());
         holder.company.setText(hotel.getCompany());
@@ -76,6 +78,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             @Override
             public void onClick(View view) {
                 RestaurantList.selection = hotel;
+                MainActivity.MapPick = MainActivity.RESTAURANT;
                 View mySharedElement = view.findViewById(R.id.booking_add_hotel_imageview);
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity,mySharedElement,"hotelImage");
                 Intent i = new Intent(mContext, RestaurantDescription.class);
@@ -115,7 +118,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder.overflow);
+                showPopupMenu(holder.overflow,position);
             }
         });
     }
@@ -123,12 +126,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
     /**
      * Showing popup menu when tapping on 3 dots
      */
-    private void showPopupMenu(View view) {
+    private void showPopupMenu(View view, int MyPosition) {
         // inflate menu
         PopupMenu popup = new PopupMenu(mContext, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_item, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(MyPosition));
         popup.show();
     }
 
@@ -137,14 +140,22 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
      */
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
+        Restaurant myHotelClicked;
+
         public MyMenuItemClickListener() {
+        }
+
+        public MyMenuItemClickListener(int MyPosition){
+            myHotelClicked = hotelList.get(MyPosition);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_append:
-
+                    MainActivity.MapPick = MainActivity.RESTAURANT;
+                    RestaurantList.selection = myHotelClicked;
+                    mContext.startActivity(new Intent(mContext,MarkerDemoActivity.class));
 
                     return true;
                 case R.id.menu_item_details:

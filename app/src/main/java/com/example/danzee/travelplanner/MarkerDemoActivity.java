@@ -16,8 +16,12 @@
 
 package com.example.danzee.travelplanner;
 
+import com.example.danzee.travelplanner.Activities.Activities;
+import com.example.danzee.travelplanner.Activities.ActivitiesList;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
+import com.example.danzee.travelplanner.Restaurant.Restaurant;
+import com.example.danzee.travelplanner.Restaurant.RestaurantList;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -70,6 +74,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -101,7 +106,13 @@ public class MarkerDemoActivity extends AppCompatActivity implements
     private static final LatLng CORON = new LatLng(12.1207327,120.10005);
     private static final LatLng EL_NIDO = new LatLng(11.202146,119.4164515);
     private static final LatLng PUERTO = new LatLng(9.9672163,118.78551);
+
+
+
     ArrayList<Marker> myMarkerList = new ArrayList<Marker>();
+
+
+
     /** Demonstrates customizing the info window and/or its contents. */
     class CustomInfoWindowAdapter implements InfoWindowAdapter {
 
@@ -220,7 +231,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.marker_demo);
-        makeMyList();
+
         mTopText = (TextView) findViewById(R.id.top_text);
 
         mRotationBar = (SeekBar) findViewById(R.id.rotationSeekBar);
@@ -254,7 +265,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
 
         // Add lots of markers to the map.
         addMarkersToMap();
-
+        makeMyList();
         // Setting an info window adapter allows us to change the both the contents and look of the
         // info window.
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
@@ -280,32 +291,90 @@ public class MarkerDemoActivity extends AppCompatActivity implements
 //                .include(BRISBANE)
 //                .include(MELBOURNE)
                 .build();
-        if(HotelList.selection != null){
-            Hotel newMarked = HotelList.selection;
-            double xAxis = 0.00;
-            double yAxis = 0.00;
-            LatLng myLocation = new LatLng(xAxis,yAxis);
-            Log.e("Map :", "HotelName : "+ newMarked.getName() +" "+ newMarked.getLocation1() + " , " + newMarked.getLocation2());
-            if(!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()){
-                try{
-                    xAxis = Double.parseDouble(newMarked.getLocation1());
-                    yAxis = Double.parseDouble(newMarked.getLocation2());
-                    myLocation = new LatLng(xAxis,yAxis);
-                }catch (NumberFormatException e){
-                    Log.e("Map :", "Incorrect format of location 1 " +e.getMessage());
+
+        if(MainActivity.MapPick.equals(MainActivity.HOTEL)){
+            if(HotelList.selection != null){
+                Hotel newMarked = HotelList.selection;
+                double xAxis = 0.00;
+                double yAxis = 0.00;
+                LatLng myLocation = new LatLng(xAxis,yAxis);
+                Log.e("Map :", "HotelName : "+ newMarked.getName() +" "+ newMarked.getLocation1() + " , " + newMarked.getLocation2());
+                if(!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()){
+                    try{
+                        xAxis = Double.parseDouble(newMarked.getLocation1());
+                        yAxis = Double.parseDouble(newMarked.getLocation2());
+                        myLocation = new LatLng(xAxis,yAxis);
+                    }catch (NumberFormatException e){
+                        Log.e("Map :", "Incorrect format of location 1 " +e.getMessage());
+                    }
+                    Log.e("Map :", "SETTING THE MAP BOUND TO : " +myLocation.toString());
+                    LatLngBounds makePickBounds = new LatLngBounds.Builder().include(myLocation).build();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(makePickBounds, 90));
+                }else{
+                    Log.e("Map :", "The Location is empty, going to set the default bounds");
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
                 }
-                Log.e("Map :", "SETTING THE MAP BOUND TO : " +myLocation.toString());
-                LatLngBounds makePickBounds = new LatLngBounds.Builder().include(myLocation).build();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(makePickBounds, 90));
+
             }else{
                 Log.e("Map :", "The Location is empty, going to set the default bounds");
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
             }
+        }else if(MainActivity.MapPick.equals(MainActivity.RESTAURANT)){
+            if(RestaurantList.selection != null){
+                Restaurant newMarked = RestaurantList.selection;
+                double xAxis = 0.00;
+                double yAxis = 0.00;
+                LatLng myLocation = new LatLng(xAxis,yAxis);
+                Log.e("Map :", "HotelName : "+ newMarked.getName() +" "+ newMarked.getLocation1() + " , " + newMarked.getLocation2());
+                if(!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()){
+                    try{
+                        xAxis = Double.parseDouble(newMarked.getLocation1());
+                        yAxis = Double.parseDouble(newMarked.getLocation2());
+                        myLocation = new LatLng(xAxis,yAxis);
+                    }catch (NumberFormatException e){
+                        Log.e("Map :", "Incorrect format of location 1 " +e.getMessage());
+                    }
+                    Log.e("Map :", "SETTING THE MAP BOUND TO : " +myLocation.toString());
+                    LatLngBounds makePickBounds = new LatLngBounds.Builder().include(myLocation).build();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(makePickBounds, 90));
+                }else{
+                    Log.e("Map :", "The Location is empty, going to set the default bounds");
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
+                }
 
-        }else{
-            Log.e("Map :", "The Location is empty, going to set the default bounds");
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
+            }else{
+                Log.e("Map :", "The Location is empty, going to set the default bounds");
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
+            }
+        }else if(MainActivity.MapPick.equals(MainActivity.ACTIVITY)){
+            if(ActivitiesList.selection != null){
+                Activities newMarked = ActivitiesList.selection;
+                double xAxis = 0.00;
+                double yAxis = 0.00;
+                LatLng myLocation = new LatLng(xAxis,yAxis);
+                Log.e("Map :", "HotelName : "+ newMarked.getName() +" "+ newMarked.getLocation1() + " , " + newMarked.getLocation2());
+                if(!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()){
+                    try{
+                        xAxis = Double.parseDouble(newMarked.getLocation1());
+                        yAxis = Double.parseDouble(newMarked.getLocation2());
+                        myLocation = new LatLng(xAxis,yAxis);
+                    }catch (NumberFormatException e){
+                        Log.e("Map :", "Incorrect format of location 1 " +e.getMessage());
+                    }
+                    Log.e("Map :", "SETTING THE MAP BOUND TO : " +myLocation.toString());
+                    LatLngBounds makePickBounds = new LatLngBounds.Builder().include(myLocation).build();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(makePickBounds, 90));
+                }else{
+                    Log.e("Map :", "The Location is empty, going to set the default bounds");
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
+                }
+
+            }else{
+                Log.e("Map :", "The Location is empty, going to set the default bounds");
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
+            }
         }
+
 
 
 
@@ -332,45 +401,45 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                 .snippet("Welcome to PUERTO PRINCESSA")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-//        // Uses a colored icon.
-        mBrisbane = mMap.addMarker(new MarkerOptions()
-                .position(BRISBANE)
-                .title("Brisbane")
-                .snippet("Population: 2,074,200")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
-        // Uses a custom icon with the info window popping out of the center of the icon.
-        mSydney = mMap.addMarker(new MarkerOptions()
-                .position(SYDNEY)
-                .title("Sydney")
-                .snippet("Population: 4,627,300")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow))
-                .infoWindowAnchor(0.5f, 0.5f));
-
-        // Creates a draggable marker. Long press to drag.
-        mMelbourne = mMap.addMarker(new MarkerOptions()
-                .position(MELBOURNE)
-                .title("Melbourne")
-                .snippet("Population: 4,137,400")
-                .icon(vectorToBitmap(R.drawable.ic_hotel_black_24px,Color.parseColor("#A4C639")))
-                .draggable(true)
-        );
-
-        // A few more markers for good measure.
-        mPerth = mMap.addMarker(new MarkerOptions()
-                .position(PERTH)
-                .title("Perth")
-                .snippet("Population: 1,738,800"));
-        mAdelaide = mMap.addMarker(new MarkerOptions()
-                .position(ADELAIDE)
-                .title("Adelaide")
-                .snippet("Population: 1,213,000"));
-
-        // Vector drawable resource as a marker icon.
-        mMap.addMarker(new MarkerOptions()
-                .position(ALICE_SPRINGS)
-                .icon(vectorToBitmap(R.drawable.ic_android, Color.parseColor("#A4C639")))
-                .title("Alice Springs"));
+////        // Uses a colored icon.
+//        mBrisbane = mMap.addMarker(new MarkerOptions()
+//                .position(BRISBANE)
+//                .title("Brisbane")
+//                .snippet("Population: 2,074,200")
+//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+//
+//        // Uses a custom icon with the info window popping out of the center of the icon.
+//        mSydney = mMap.addMarker(new MarkerOptions()
+//                .position(SYDNEY)
+//                .title("Sydney")
+//                .snippet("Population: 4,627,300")
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow))
+//                .infoWindowAnchor(0.5f, 0.5f));
+//
+//        // Creates a draggable marker. Long press to drag.
+//        mMelbourne = mMap.addMarker(new MarkerOptions()
+//                .position(MELBOURNE)
+//                .title("Melbourne")
+//                .snippet("Population: 4,137,400")
+//                .icon(vectorToBitmap(R.drawable.ic_hotel_black_24px,Color.parseColor("#A4C639")))
+//                .draggable(true)
+//        );
+//
+//        // A few more markers for good measure.
+//        mPerth = mMap.addMarker(new MarkerOptions()
+//                .position(PERTH)
+//                .title("Perth")
+//                .snippet("Population: 1,738,800"));
+//        mAdelaide = mMap.addMarker(new MarkerOptions()
+//                .position(ADELAIDE)
+//                .title("Adelaide")
+//                .snippet("Population: 1,213,000"));
+//
+//        // Vector drawable resource as a marker icon.
+//        mMap.addMarker(new MarkerOptions()
+//                .position(ALICE_SPRINGS)
+//                .icon(vectorToBitmap(R.drawable.ic_android, Color.parseColor("#A4C639")))
+//                .title("Alice Springs"));
 
         // Creates a marker rainbow demonstrating how to create default marker icons of different
         // hues (colors).
@@ -544,55 +613,146 @@ public class MarkerDemoActivity extends AppCompatActivity implements
 
     public void makeMyList(){
 
+        if(MainActivity.MapPick.equals(MainActivity.HOTEL)){
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference().child("Hotels");
+            databaseReference.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Hotel tempHotel = dataSnapshot.getValue(Hotel.class);
+                    Marker tempMarker;
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Hotels");
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                Hotel tempHotel = dataSnapshot.getValue(Hotel.class);
-//                Marker tempMarker;
-//                LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()),Double.parseDouble(tempHotel.getLocation2()));
-//                tempMarker = mMap.addMarker(new MarkerOptions()
-//                        .position(myPosition)
-//                        .title(tempHotel.getName())
-//                        .snippet("Price :" + String.valueOf(tempHotel.getAveragePrice())));
-//                    myMarkerList.add(tempMarker);
+                    if(tempHotel.getLocation1() != null && tempHotel.getLocation2() != null){
 
-            }
+                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()),Double.parseDouble(tempHotel.getLocation2()));
+                        tempMarker = mMap.addMarker(new MarkerOptions()
+                                .position(myPosition)
+                                .title(tempHotel.getName())
+                                .icon(vectorToBitmap(R.drawable.ic_hotel_black_24px, Color.parseColor("#A4C639")))
+                                .snippet("Price :" + String.valueOf(tempHotel.getAveragePrice())));
+                        myMarkerList.add(tempMarker);
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : "+ tempHotel.getLocation2());
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
-        });
+                }
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
+                }
+            });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+        }else if(MainActivity.MapPick.equals(MainActivity.RESTAURANT)){
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference().child("Restaurant");
+            databaseReference.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
+                    Marker tempMarker;
+
+                    if(tempHotel.getLocation1() != null && tempHotel.getLocation2() != null){
+
+                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()),Double.parseDouble(tempHotel.getLocation2()));
+                        tempMarker = mMap.addMarker(new MarkerOptions()
+                                .position(myPosition)
+                                .title(tempHotel.getName())
+                                .icon(vectorToBitmap(R.drawable.ic_hotel_black_24px, Color.parseColor("#DD0000")))
+                                .snippet("Price :" + String.valueOf(tempHotel.getPrice())));
+                        myMarkerList.add(tempMarker);
+
+                    }
+                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : "+ tempHotel.getLocation2());
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }else if(MainActivity.MapPick.equals(MainActivity.ACTIVITY)){
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference().child("Activity");
+            databaseReference.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Activities tempHotel = dataSnapshot.getValue(Activities.class);
+                    Marker tempMarker;
+
+                    if(tempHotel.getLocation1() != null && tempHotel.getLocation2() != null){
+
+                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()),Double.parseDouble(tempHotel.getLocation2()));
+                        tempMarker = mMap.addMarker(new MarkerOptions()
+                                .position(myPosition)
+                                .title(tempHotel.getName())
+                                .icon(vectorToBitmap(R.drawable.ic_directions_bike_black_24px, Color.parseColor("#CCCCCC")))
+                                .snippet("Price :" + String.valueOf(tempHotel.getTotalCost())));
+                        myMarkerList.add(tempMarker);
+
+                    }
+                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : "+ tempHotel.getLocation2());
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
+
 
     }
 

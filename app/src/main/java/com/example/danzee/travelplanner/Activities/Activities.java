@@ -15,10 +15,37 @@ public class Activities {
     private String Name;
     private String Details;
     private String Company;
+    private String Location1;
+    private String Location2;
+    private int Rating;
     private String Map;
 
     @Exclude
     public Uri myUri;
+
+    public int getRating() {
+        return Rating;
+    }
+
+    public void setRating(int rating) {
+        Rating = rating;
+    }
+
+    public String getLocation1() {
+        return Location1;
+    }
+
+    public void setLocation1(String location1) {
+        Location1 = location1;
+    }
+
+    public String getLocation2() {
+        return Location2;
+    }
+
+    public void setLocation2(String location2) {
+        Location2 = location2;
+    }
 
     public String getCompany() {
         return Company;
