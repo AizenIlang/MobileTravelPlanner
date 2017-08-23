@@ -16,11 +16,15 @@
 
 package com.example.danzee.travelplanner;
 
+import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.Activities.Activities;
+import com.example.danzee.travelplanner.Activities.ActivitiesDescription;
 import com.example.danzee.travelplanner.Activities.ActivitiesList;
 import com.example.danzee.travelplanner.Hotel.Hotel;
+import com.example.danzee.travelplanner.Hotel.HotelDescription;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.Restaurant.Restaurant;
+import com.example.danzee.travelplanner.Restaurant.RestaurantDescription;
 import com.example.danzee.travelplanner.Restaurant.RestaurantList;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,26 +41,34 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import android.Manifest;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -115,6 +127,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
 
 
     ArrayList<Marker> myMarkerList = new ArrayList<Marker>();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
 
     /** Demonstrates customizing the info window and/or its contents. */
@@ -603,7 +616,136 @@ public class MarkerDemoActivity extends AppCompatActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(this, "Click Info Window", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Click Info Window", Toast.LENGTH_SHORT).show();
+        //WE Query the ID of the Marker from the Database then go to the Designated
+        String myTitle = marker.getTitle();
+        Log.e("Map","The Icon is :" + marker.getSnippet().toString());
+        String myDataLocation = "";
+        if(marker.getSnippet().equals("Hotel")){
+            myDataLocation = "Hotels";
+        }else if(marker.getSnippet().equals("Restaurant")){
+            myDataLocation = "Restaurant";
+        }else if (marker.getSnippet().equals("Activity")){
+            myDataLocation = "Activity";
+        }
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        Query queryMarker = firebaseDatabase.getReference().child(myDataLocation).orderByChild("name").equalTo(marker.getTitle()).limitToFirst(1);
+        final String finalMyDataLocation = myDataLocation;
+        queryMarker.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(finalMyDataLocation.equals("Hotels")){
+                    final Hotel myTemp = dataSnapshot.getChildren().iterator().next().getValue(Hotel.class);
+                    myTemp.setID(dataSnapshot.getChildren().iterator().next().getKey());
+                    HotelList.selection = myTemp;
+                    MainActivity.MapPick = MainActivity.HOTEL;
+                    Log.e("Map", "Got your Description :" +myTemp.getDetails());
+
+
+                    StorageReference storageRef = storage.getReference();
+// Create a reference with an initial file path and name
+                    String path = myTemp.getPhotoURL();
+//        StorageReference pathReference = storageRef.child(path);
+
+                    storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            // Got the download URL for 'users/me/profile.png'
+                            try{
+                                startActivity(new Intent(MarkerDemoActivity.this, HotelDescription.class));
+                                myTemp.myUri = uri;
+                            }catch (Exception e){
+                                Log.e("Logger",e.getMessage());
+                            }
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+
+                }else if(finalMyDataLocation.equals("Restaurant")){
+
+                    final Restaurant myTemp = dataSnapshot.getChildren().iterator().next().getValue(Restaurant.class);
+
+                    RestaurantList.selection = myTemp;
+                    MainActivity.MapPick = MainActivity.RESTAURANT;
+                    Log.e("Map", "Got your Description :" +myTemp.getDetails());
+
+                    StorageReference storageRef = storage.getReference();
+// Create a reference with an initial file path and name
+                    String path = myTemp.getPhotoUrl();
+//        StorageReference pathReference = storageRef.child(path);
+
+                    storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            // Got the download URL for 'users/me/profile.png'
+                            try{
+
+                                myTemp.myUri = uri;
+                                startActivity(new Intent(MarkerDemoActivity.this, RestaurantDescription.class));
+                            }catch (Exception e){
+                                Log.e("Logger",e.getMessage());
+                            }
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+
+
+                }else if(finalMyDataLocation.equals("Activity")){
+                    final Activities myTemp = dataSnapshot.getChildren().iterator().next().getValue(Activities.class);
+                    ActivitiesList.selection = myTemp;
+                    MainActivity.MapPick = MainActivity.ACTIVITY;
+                    Log.e("Map", "Got your Description :" +myTemp.getDetails());
+
+
+                    StorageReference storageRef = storage.getReference();
+// Create a reference with an initial file path and name
+                    String path = myTemp.getPhotoURL();
+//        StorageReference pathReference = storageRef.child(path);
+
+                    storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            // Got the download URL for 'users/me/profile.png'
+                            try{
+
+                                myTemp.myUri = uri;
+                                startActivity(new Intent(MarkerDemoActivity.this, ActivitiesDescription.class));
+                            }catch (Exception e){
+                                Log.e("Logger",e.getMessage());
+                            }
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -650,7 +792,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                                 .position(myPosition)
                                 .title(tempHotel.getName())
                                 .icon(vectorToBitmap(R.drawable.ic_hotel_black_24px, Color.parseColor("#A4C639")))
-                                .snippet("Price :" + String.valueOf(tempHotel.getAveragePrice())));
+                                .snippet("Hotel"));
                         myMarkerList.add(tempMarker);
 
                     }
@@ -695,8 +837,8 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                         tempMarker = mMap.addMarker(new MarkerOptions()
                                 .position(myPosition)
                                 .title(tempHotel.getName())
-                                .icon(vectorToBitmap(R.drawable.ic_hotel_black_24px, Color.parseColor("#DD0000")))
-                                .snippet("Price :" + String.valueOf(tempHotel.getPrice())));
+                                .icon(vectorToBitmap(R.drawable.ic_local_dining_black_24px, Color.parseColor("#DD0000")))
+                                .snippet("Restaurant"));
                         myMarkerList.add(tempMarker);
 
                     }
@@ -742,7 +884,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                                 .position(myPosition)
                                 .title(tempHotel.getName())
                                 .icon(vectorToBitmap(R.drawable.ic_directions_bike_black_24px, Color.parseColor("#CCCCCC")))
-                                .snippet("Price :" + String.valueOf(tempHotel.getTotalCost())));
+                                .snippet("Activity"));
                         myMarkerList.add(tempMarker);
 
                     }

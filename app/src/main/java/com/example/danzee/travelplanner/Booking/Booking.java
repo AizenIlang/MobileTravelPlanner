@@ -21,8 +21,17 @@ public class Booking {
     private Hotel Hotel;
     private ArrayList<Activities> activitiesArrayList;
     private Rooms Rooms;
+    private boolean Favorite;
 
     public Booking() {
+    }
+
+    public boolean isFavorite() {
+        return Favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        Favorite = favorite;
     }
 
     public String getID() {

@@ -175,7 +175,7 @@ public class RestaurantList extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
-
+                tempHotel.setID(dataSnapshot.getKey());
                 hotelList.add(tempHotel);
             }
 
@@ -221,6 +221,7 @@ public class RestaurantList extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
+                tempHotel.setID(dataSnapshot.getKey());
                 hotelList.add(tempHotel);
             }
 
@@ -266,7 +267,7 @@ public class RestaurantList extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
-
+                tempHotel.setID(dataSnapshot.getKey());
                 hotelList.add(tempHotel);
             }
 
@@ -307,11 +308,12 @@ public class RestaurantList extends AppCompatActivity {
     public void populateListPuerto()
     {
         hotelList.clear();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Restaurant").child("PUERTO PRINCESSA");
+        final DatabaseReference databaseReference = firebaseDatabase.getReference().child("Group").child("Restaurant").child("PUERTO PRINCESSA");
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
+                tempHotel.setID(dataSnapshot.getKey());
                 hotelList.add(tempHotel);
             }
 

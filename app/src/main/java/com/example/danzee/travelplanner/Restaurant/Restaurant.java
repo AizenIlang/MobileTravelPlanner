@@ -9,6 +9,8 @@ import com.google.firebase.database.Exclude;
  */
 
 public class Restaurant {
+    @Exclude
+    private String ID;
     private String Name;
     private double Price;
     private String sPrice;
@@ -18,7 +20,7 @@ public class Restaurant {
     private String Location1;
     private String Location2;
     private String Group;
-    private int Rating;
+    private float Rating;
 
     @Exclude
     public Uri myUri;
@@ -27,11 +29,19 @@ public class Restaurant {
 
     }
 
-    public int getRating() {
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public float getRating() {
         return Rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         Rating = rating;
     }
 

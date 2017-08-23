@@ -4,36 +4,40 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_my_travels"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_airport_shuttle_black_24dp"
             android:title="My Travels" />
 
         <item
             android:id="@+id/nav_hotels"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_hotel_black_24px"
             android:title="Hotels" />
         <item
             android:id="@+id/nav_activities"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_directions_bike_black_24px"
             android:title="Activities" />
         <item
             android:id="@+id/nav_restaurant"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_local_dining_black_24px"
             android:title="Restaurant" />
+        <item
+            android:id="@+id/nav_promo"
+            android:icon="@drawable/ic_folder_special_black_24dp"
+            android:title="Bundle Promo" />
     </group>
 
     <item android:title="Profile">
         <menu>
             <item
                 android:id="@+id/nav_my_profile"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_face_black_24dp"
                 android:title="My Profile" />
             <item
                 android:id="@+id/nav_admin"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/ic_cloud_circle_black_24dp"
                 android:title="Admin" />
             <item
                 android:id="@+id/nav_log_out"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
                 android:title="Log out" />
         </menu>
     </item>

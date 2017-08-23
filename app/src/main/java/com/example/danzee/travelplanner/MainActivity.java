@@ -21,6 +21,7 @@ import com.example.danzee.travelplanner.Activities.Activities;
 import com.example.danzee.travelplanner.Activities.ActivitiesList;
 import com.example.danzee.travelplanner.Admin.Admin;
 import com.example.danzee.travelplanner.Booking.Booking;
+import com.example.danzee.travelplanner.Booking.BookingList;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.Restaurant.Restaurant;
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_travels) {
-            startActivity(new Intent(MainActivity.this, Booking.class));
+            startActivity(new Intent(MainActivity.this, BookingList.class));
         } else if (id == R.id.nav_admin) {
             startActivity(new Intent(MainActivity.this, Admin.class));
 

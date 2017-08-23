@@ -49,6 +49,7 @@ public class HotelList extends AppCompatActivity {
     public FloatingActionButton fab;
     public LinearLayout sortAtoZ;
     public LinearLayout sortPrice;
+    public LinearLayout sortRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class HotelList extends AppCompatActivity {
 
         sortAtoZ = bottomSheetView.findViewById(R.id.bottom_sheet_sort_az);
         sortPrice = bottomSheetView.findViewById(R.id.bottom_sheet_sort_price);
+        sortRating = bottomSheetView.findViewById(R.id.bottom_sheet_sort_rating);
 
         sortAtoZ.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +96,12 @@ public class HotelList extends AppCompatActivity {
             }
         });
 
+        sortRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SortByRating();
+            }
+        });
         Button coron = (Button) findViewById(R.id.booking_add_hotel_coron_btn);
         Button elnido = (Button) findViewById(R.id.booking_add_hotel_elnido_btn);
         Button puerto = (Button) findViewById(R.id.booking_add_hotel_puerto_btn);
@@ -437,6 +445,19 @@ public class HotelList extends AppCompatActivity {
 
         });
 
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void SortByRating(){
+        Collections.sort(hotelList, new Comparator<Hotel>() {
+            @Override
+            public int compare(Hotel hotel, Hotel t1) {
+                return Float.compare(hotel.getRating(),t1.getRating());
+            }
+
+
+        });
+        Collections.reverse(hotelList);
         recyclerView.setAdapter(adapter);
     }
 }

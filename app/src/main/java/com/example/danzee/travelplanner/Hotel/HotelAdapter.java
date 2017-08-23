@@ -102,6 +102,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         public TextView descriptionView;
 
 
+
         public ViewHolder(View itemView) {
             super(itemView);
 

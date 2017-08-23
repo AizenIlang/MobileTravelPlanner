@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -24,6 +25,13 @@
                 android:clickable="true"
                 android:transitionName="hotelImage"
                 android:scaleType="fitXY" />
+
+            <RatingBar
+                android:id="@+id/booking_add_hotel_rating"
+                style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="false" />
 
             <TextView
                 android:id="@+id/booking_add_hotel_name"

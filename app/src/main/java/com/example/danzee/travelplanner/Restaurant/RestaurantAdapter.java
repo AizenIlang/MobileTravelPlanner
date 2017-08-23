@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ import com.example.danzee.travelplanner.Restaurant.Restaurant;
 import com.example.danzee.travelplanner.Restaurant.RestaurantList;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -36,6 +39,7 @@ import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.MyViewHolder> {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private Context mContext;
     private List<Restaurant> hotelList;
     private Activity mActivity;
@@ -43,6 +47,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, company;
         public ImageView imageView, overflow;
+        public RatingBar ratingBar;
 
         public MyViewHolder(View view) {
             super(view);
@@ -50,6 +55,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             company = (TextView) view.findViewById(R.id.booking_add_hotel_company);
             imageView = (ImageView) view.findViewById(R.id.booking_add_hotel_imageview);
             overflow = (ImageView) view.findViewById(R.id.booking_add_hotel_overflow);
+            ratingBar = (RatingBar) view.findViewById(R.id.booking_add_hotel_rating);
         }
     }
 
@@ -74,6 +80,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         holder.name.setText(hotel.getName());
         holder.company.setText(hotel.getCompany());
 
+        holder.ratingBar.setRating(hotel.getRating());
+
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,6 +94,21 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
 
             }
         });
+
+        holder.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                hotel.setRating(v);
+                hotelList.get(position).setRating(v);
+                DatabaseReference databaseReference = database.getReference().child("Restaurant").child(hotel.getID());
+                databaseReference.setValue(hotel);
+
+                DatabaseReference databaseReference2 = database.getReference().child("Group").child("Restaurant").child(hotel.getGroup()).child(hotel.getID());
+                databaseReference2.setValue(hotel);
+                Toast.makeText(mContext,"Thank you for Rating.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // Create a storage reference from our app
 
         StorageReference storageRef = storage.getReference();

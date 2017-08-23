@@ -10,24 +10,24 @@ import com.google.firebase.database.Exclude;
  */
 
 public class Activities {
-
+    @Exclude
     private String ID;
     private String Name;
     private String Details;
     private String Company;
     private String Location1;
     private String Location2;
-    private int Rating;
+    private float Rating;
     private String Map;
 
     @Exclude
     public Uri myUri;
 
-    public int getRating() {
+    public float getRating() {
         return Rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         Rating = rating;
     }
 

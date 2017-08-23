@@ -266,7 +266,7 @@ public class ActivitiesList extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Activities tempHotel = dataSnapshot.getValue(Activities.class);
-
+                tempHotel.setID(dataSnapshot.getKey());
                 hotelList.add(tempHotel);
             }
 

@@ -54,5 +54,25 @@
             android:gravity="center_vertical"
             />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottom_sheet_sort_rating"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_star_half_black_24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginLeft="16dp"
+            android:text="Rating"
+            android:gravity="center_vertical"
+            />
+    </LinearLayout>
 </LinearLayout>
 

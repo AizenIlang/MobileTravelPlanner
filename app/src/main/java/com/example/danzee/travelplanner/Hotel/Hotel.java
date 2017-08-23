@@ -22,18 +22,18 @@ public class Hotel {
     private String Location2;
     private double AveragePrice;
     private Rooms Rooms;
-    private int Rating;
+    private float Rating;
     private String Group;
 
 
     @Exclude
     public Uri myUri;
 
-    public int getRating() {
+    public float getRating() {
         return Rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         Rating = rating;
     }
 
