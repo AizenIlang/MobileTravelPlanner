@@ -44,6 +44,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import android.Manifest;
+
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -54,6 +57,8 @@ import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -101,16 +106,15 @@ public class MarkerDemoActivity extends AppCompatActivity implements
 
     private static final LatLng ALICE_SPRINGS = new LatLng(-24.6980, 133.8807);
 
-    private static final LatLng MANDALUYONG_CITYHALL = new LatLng(14.5777334,121.0314702);
+    private static final LatLng MANDALUYONG_CITYHALL = new LatLng(14.5777334, 121.0314702);
 
-    private static final LatLng CORON = new LatLng(12.1207327,120.10005);
-    private static final LatLng EL_NIDO = new LatLng(11.202146,119.4164515);
-    private static final LatLng PUERTO = new LatLng(9.9672163,118.78551);
-
+    private static final LatLng CORON = new LatLng(12.1207327, 120.10005);
+    private static final LatLng EL_NIDO = new LatLng(11.202146, 119.4164515);
+    private static final LatLng PUERTO = new LatLng(9.9672163, 118.78551);
+    private static final int MY_LOCATION_REQUEST_CODE = 30;
 
 
     ArrayList<Marker> myMarkerList = new ArrayList<Marker>();
-
 
 
     /** Demonstrates customizing the info window and/or its contents. */
@@ -281,10 +285,29 @@ public class MarkerDemoActivity extends AppCompatActivity implements
         // Ideally this string would be localised.
         mMap.setContentDescription("Map with lots of markers.");
 
+
+        //WE DOUBLE CHECK IF THE MY CURRENT LOCATION IS SUPPORTED
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            Log.e("Map", "Setting my Location Enabled");
+            mMap.setMyLocationEnabled(true);
+
+            map.getUiSettings().setMyLocationButtonEnabled(true);
+        } else {
+            // Show rationale and request permission.
+            Log.e("Map", "Requesting permission");
+            ActivityCompat.requestPermissions(MarkerDemoActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_LOCATION_REQUEST_CODE);
+
+
+        }
+
         LatLngBounds bounds = new LatLngBounds.Builder()
-                  .include(PUERTO)
-                  .include(CORON)
-                  .include(EL_NIDO)
+                .include(PUERTO)
+                .include(CORON)
+                .include(EL_NIDO)
+                .include(EL_NIDO)
 //                .include(PERTH)
 //                .include(SYDNEY)
 //                .include(ADELAIDE)
@@ -292,90 +315,88 @@ public class MarkerDemoActivity extends AppCompatActivity implements
 //                .include(MELBOURNE)
                 .build();
 
-        if(MainActivity.MapPick.equals(MainActivity.HOTEL)){
-            if(HotelList.selection != null){
+        if (MainActivity.MapPick.equals(MainActivity.HOTEL)) {
+            if (HotelList.selection != null) {
                 Hotel newMarked = HotelList.selection;
                 double xAxis = 0.00;
                 double yAxis = 0.00;
-                LatLng myLocation = new LatLng(xAxis,yAxis);
-                Log.e("Map :", "HotelName : "+ newMarked.getName() +" "+ newMarked.getLocation1() + " , " + newMarked.getLocation2());
-                if(!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()){
-                    try{
+                LatLng myLocation = new LatLng(xAxis, yAxis);
+                Log.e("Map :", "HotelName : " + newMarked.getName() + " " + newMarked.getLocation1() + " , " + newMarked.getLocation2());
+                if (!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()) {
+                    try {
                         xAxis = Double.parseDouble(newMarked.getLocation1());
                         yAxis = Double.parseDouble(newMarked.getLocation2());
-                        myLocation = new LatLng(xAxis,yAxis);
-                    }catch (NumberFormatException e){
-                        Log.e("Map :", "Incorrect format of location 1 " +e.getMessage());
+                        myLocation = new LatLng(xAxis, yAxis);
+                    } catch (NumberFormatException e) {
+                        Log.e("Map :", "Incorrect format of location 1 " + e.getMessage());
                     }
-                    Log.e("Map :", "SETTING THE MAP BOUND TO : " +myLocation.toString());
+                    Log.e("Map :", "SETTING THE MAP BOUND TO : " + myLocation.toString());
                     LatLngBounds makePickBounds = new LatLngBounds.Builder().include(myLocation).build();
                     mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(makePickBounds, 90));
-                }else{
+                } else {
                     Log.e("Map :", "The Location is empty, going to set the default bounds");
                     mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
                 }
 
-            }else{
+            } else {
                 Log.e("Map :", "The Location is empty, going to set the default bounds");
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
             }
-        }else if(MainActivity.MapPick.equals(MainActivity.RESTAURANT)){
-            if(RestaurantList.selection != null){
+        } else if (MainActivity.MapPick.equals(MainActivity.RESTAURANT)) {
+            if (RestaurantList.selection != null) {
                 Restaurant newMarked = RestaurantList.selection;
                 double xAxis = 0.00;
                 double yAxis = 0.00;
-                LatLng myLocation = new LatLng(xAxis,yAxis);
-                Log.e("Map :", "HotelName : "+ newMarked.getName() +" "+ newMarked.getLocation1() + " , " + newMarked.getLocation2());
-                if(!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()){
-                    try{
+                LatLng myLocation = new LatLng(xAxis, yAxis);
+                Log.e("Map :", "HotelName : " + newMarked.getName() + " " + newMarked.getLocation1() + " , " + newMarked.getLocation2());
+                if (!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()) {
+                    try {
                         xAxis = Double.parseDouble(newMarked.getLocation1());
                         yAxis = Double.parseDouble(newMarked.getLocation2());
-                        myLocation = new LatLng(xAxis,yAxis);
-                    }catch (NumberFormatException e){
-                        Log.e("Map :", "Incorrect format of location 1 " +e.getMessage());
+                        myLocation = new LatLng(xAxis, yAxis);
+                    } catch (NumberFormatException e) {
+                        Log.e("Map :", "Incorrect format of location 1 " + e.getMessage());
                     }
-                    Log.e("Map :", "SETTING THE MAP BOUND TO : " +myLocation.toString());
+                    Log.e("Map :", "SETTING THE MAP BOUND TO : " + myLocation.toString());
                     LatLngBounds makePickBounds = new LatLngBounds.Builder().include(myLocation).build();
                     mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(makePickBounds, 90));
-                }else{
+                } else {
                     Log.e("Map :", "The Location is empty, going to set the default bounds");
                     mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
                 }
 
-            }else{
+            } else {
                 Log.e("Map :", "The Location is empty, going to set the default bounds");
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
             }
-        }else if(MainActivity.MapPick.equals(MainActivity.ACTIVITY)){
-            if(ActivitiesList.selection != null){
+        } else if (MainActivity.MapPick.equals(MainActivity.ACTIVITY)) {
+            if (ActivitiesList.selection != null) {
                 Activities newMarked = ActivitiesList.selection;
                 double xAxis = 0.00;
                 double yAxis = 0.00;
-                LatLng myLocation = new LatLng(xAxis,yAxis);
-                Log.e("Map :", "HotelName : "+ newMarked.getName() +" "+ newMarked.getLocation1() + " , " + newMarked.getLocation2());
-                if(!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()){
-                    try{
+                LatLng myLocation = new LatLng(xAxis, yAxis);
+                Log.e("Map :", "HotelName : " + newMarked.getName() + " " + newMarked.getLocation1() + " , " + newMarked.getLocation2());
+                if (!newMarked.getLocation1().isEmpty() && !newMarked.getLocation2().isEmpty()) {
+                    try {
                         xAxis = Double.parseDouble(newMarked.getLocation1());
                         yAxis = Double.parseDouble(newMarked.getLocation2());
-                        myLocation = new LatLng(xAxis,yAxis);
-                    }catch (NumberFormatException e){
-                        Log.e("Map :", "Incorrect format of location 1 " +e.getMessage());
+                        myLocation = new LatLng(xAxis, yAxis);
+                    } catch (NumberFormatException e) {
+                        Log.e("Map :", "Incorrect format of location 1 " + e.getMessage());
                     }
-                    Log.e("Map :", "SETTING THE MAP BOUND TO : " +myLocation.toString());
-                    LatLngBounds makePickBounds = new LatLngBounds.Builder().include(myLocation).build();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(makePickBounds, 90));
-                }else{
-                    Log.e("Map :", "The Location is empty, going to set the default bounds");
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
+                    Log.e("Map :", "SETTING THE MAP BOUND TO : " + myLocation.toString());
+//                    LatLngBounds makePickBounds = new LatLngBounds.Builder().include(myLocation).build();
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(makePickBounds, 90));
+                } else {
+//                    Log.e("Map :", "The Location is empty, going to set the default bounds");
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
                 }
 
-            }else{
-                Log.e("Map :", "The Location is empty, going to set the default bounds");
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
+            } else {
+//                Log.e("Map :", "The Location is empty, going to set the default bounds");
+//                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
             }
         }
-
-
 
 
     }
@@ -611,9 +632,9 @@ public class MarkerDemoActivity extends AppCompatActivity implements
     }
 
 
-    public void makeMyList(){
+    public void makeMyList() {
 
-        if(MainActivity.MapPick.equals(MainActivity.HOTEL)){
+        if (MainActivity.MapPick.equals(MainActivity.HOTEL)) {
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
             DatabaseReference databaseReference = firebaseDatabase.getReference().child("Hotels");
             databaseReference.addChildEventListener(new ChildEventListener() {
@@ -622,9 +643,9 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                     Hotel tempHotel = dataSnapshot.getValue(Hotel.class);
                     Marker tempMarker;
 
-                    if(tempHotel.getLocation1() != null && tempHotel.getLocation2() != null){
+                    if (tempHotel.getLocation1() != null && tempHotel.getLocation2() != null) {
 
-                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()),Double.parseDouble(tempHotel.getLocation2()));
+                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()), Double.parseDouble(tempHotel.getLocation2()));
                         tempMarker = mMap.addMarker(new MarkerOptions()
                                 .position(myPosition)
                                 .title(tempHotel.getName())
@@ -633,7 +654,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                         myMarkerList.add(tempMarker);
 
                     }
-                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : "+ tempHotel.getLocation2());
+                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : " + tempHotel.getLocation2());
 
                 }
 
@@ -659,7 +680,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
             });
 
 
-        }else if(MainActivity.MapPick.equals(MainActivity.RESTAURANT)){
+        } else if (MainActivity.MapPick.equals(MainActivity.RESTAURANT)) {
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
             DatabaseReference databaseReference = firebaseDatabase.getReference().child("Restaurant");
             databaseReference.addChildEventListener(new ChildEventListener() {
@@ -668,9 +689,9 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                     Restaurant tempHotel = dataSnapshot.getValue(Restaurant.class);
                     Marker tempMarker;
 
-                    if(tempHotel.getLocation1() != null && tempHotel.getLocation2() != null){
+                    if (tempHotel.getLocation1() != null && tempHotel.getLocation2() != null) {
 
-                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()),Double.parseDouble(tempHotel.getLocation2()));
+                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()), Double.parseDouble(tempHotel.getLocation2()));
                         tempMarker = mMap.addMarker(new MarkerOptions()
                                 .position(myPosition)
                                 .title(tempHotel.getName())
@@ -679,7 +700,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                         myMarkerList.add(tempMarker);
 
                     }
-                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : "+ tempHotel.getLocation2());
+                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : " + tempHotel.getLocation2());
 
                 }
 
@@ -705,7 +726,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
             });
 
 
-        }else if(MainActivity.MapPick.equals(MainActivity.ACTIVITY)){
+        } else if (MainActivity.MapPick.equals(MainActivity.ACTIVITY)) {
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
             DatabaseReference databaseReference = firebaseDatabase.getReference().child("Activity");
             databaseReference.addChildEventListener(new ChildEventListener() {
@@ -714,9 +735,9 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                     Activities tempHotel = dataSnapshot.getValue(Activities.class);
                     Marker tempMarker;
 
-                    if(tempHotel.getLocation1() != null && tempHotel.getLocation2() != null){
+                    if (tempHotel.getLocation1() != null && tempHotel.getLocation2() != null) {
 
-                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()),Double.parseDouble(tempHotel.getLocation2()));
+                        LatLng myPosition = new LatLng(Double.parseDouble(tempHotel.getLocation1()), Double.parseDouble(tempHotel.getLocation2()));
                         tempMarker = mMap.addMarker(new MarkerOptions()
                                 .position(myPosition)
                                 .title(tempHotel.getName())
@@ -725,7 +746,7 @@ public class MarkerDemoActivity extends AppCompatActivity implements
                         myMarkerList.add(tempMarker);
 
                     }
-                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : "+ tempHotel.getLocation2());
+                    Log.e("Map :", "Location 1 is : " + tempHotel.getLocation1() + " " + "Location 2 is : " + tempHotel.getLocation2());
 
                 }
 
@@ -756,6 +777,30 @@ public class MarkerDemoActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == MY_LOCATION_REQUEST_CODE) {
+            if (permissions.length == 1 &&
+                    permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                mMap.setMyLocationEnabled(true);
+                Log.e("Map", "Setting my Location Enabled");
+            } else {
+                // Permission was denied. Display an error message.
+                Log.e("Map", "Setting my Location False");
+            }
+        }
+    }
     public void ChangeTheList(){
 
     }
