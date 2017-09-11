@@ -2,6 +2,7 @@ package com.example.danzee.travelplanner.Booking;
 
 import com.example.danzee.travelplanner.Activities.Activities;
 import com.example.danzee.travelplanner.Hotel.Hotel;
+import com.example.danzee.travelplanner.Restaurant.Restaurant;
 import com.example.danzee.travelplanner.Rooms.Rooms;
 import com.google.firebase.database.Exclude;
 
@@ -20,10 +21,19 @@ public class Booking {
     private double iTotalCost;
     private Hotel Hotel;
     private ArrayList<Activities> activitiesArrayList;
+    private ArrayList<Restaurant> restaurantArrayList;
     private Rooms Rooms;
     private boolean Favorite;
 
     public Booking() {
+    }
+
+    public ArrayList<Restaurant> getRestaurantArrayList() {
+        return restaurantArrayList;
+    }
+
+    public void setRestaurantArrayList(ArrayList<Restaurant> restaurantArrayList) {
+        this.restaurantArrayList = restaurantArrayList;
     }
 
     public boolean isFavorite() {

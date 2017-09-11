@@ -78,9 +78,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Restaurant hotel = hotelList.get(position);
         holder.name.setText(hotel.getName());
-        holder.company.setText(hotel.getCompany());
+        holder.company.setText(hotel.getsPrice());
 
-        holder.ratingBar.setRating(hotel.getRating());
+        holder.ratingBar.setRating(hotelList.get(position).getRating() / hotel.getNumberOfRates());
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,19 +95,19 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             }
         });
 
-        holder.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                hotel.setRating(v);
-                hotelList.get(position).setRating(v);
-                DatabaseReference databaseReference = database.getReference().child("Restaurant").child(hotel.getID());
-                databaseReference.setValue(hotel);
-
-                DatabaseReference databaseReference2 = database.getReference().child("Group").child("Restaurant").child(hotel.getGroup()).child(hotel.getID());
-                databaseReference2.setValue(hotel);
-                Toast.makeText(mContext,"Thank you for Rating.",Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//            @Override
+//            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+//                hotel.setRating(v);
+//                hotelList.get(position).setRating(v);
+//                DatabaseReference databaseReference = database.getReference().child("Restaurant").child(hotel.getID());
+//                databaseReference.setValue(hotel);
+//
+//                DatabaseReference databaseReference2 = database.getReference().child("Group").child("Restaurant").child(hotel.getGroup()).child(hotel.getID());
+//                databaseReference2.setValue(hotel);
+//                Toast.makeText(mContext,"Thank you for Rating.",Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         // Create a storage reference from our app
 

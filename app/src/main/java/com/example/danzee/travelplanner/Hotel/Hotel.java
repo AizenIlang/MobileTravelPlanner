@@ -23,6 +23,7 @@ public class Hotel {
     private double AveragePrice;
     private Rooms Rooms;
     private float Rating;
+    private int NumberOfRates;
     private String Group;
 
 
@@ -31,6 +32,14 @@ public class Hotel {
 
     public float getRating() {
         return Rating;
+    }
+
+    public int getNumberOfRates() {
+        return NumberOfRates;
+    }
+
+    public void setNumberOfRates(int numberOfRates) {
+        NumberOfRates = numberOfRates;
     }
 
     public void setRating(float rating) {

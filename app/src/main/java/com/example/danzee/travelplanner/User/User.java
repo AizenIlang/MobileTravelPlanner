@@ -19,6 +19,8 @@ public class User {
     private String Email;
     private String Password;
     private String Type;
+    private double Budget;
+
 
     public User() {
     }
@@ -31,6 +33,14 @@ public class User {
         Email = email;
         Password = password;
         Type = type;
+    }
+
+    public double getBudget() {
+        return Budget;
+    }
+
+    public void setBudget(double budget) {
+        Budget = budget;
     }
 
     public String getUserID() {

@@ -18,10 +18,19 @@ public class Activities {
     private String Location1;
     private String Location2;
     private float Rating;
+    private int NumberOfRates;
     private String Map;
 
     @Exclude
     public Uri myUri;
+
+    public int getNumberOfRates() {
+        return NumberOfRates;
+    }
+
+    public void setNumberOfRates(int numberOfRates) {
+        NumberOfRates = numberOfRates;
+    }
 
     public float getRating() {
         return Rating;
@@ -93,7 +102,7 @@ public class Activities {
     }
 
     public String getsTotalCost() {
-        return sTotalCost;
+        return String.valueOf(this.getTotalCost());
     }
 
     public void setsTotalCost(String sTotalCost) {

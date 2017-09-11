@@ -93,8 +93,8 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
 
             }
         });
-
-        holder.ratingBar.setOnRatingBarChangeListener(onRatingBarChangeListener(holder,position));
+        holder.ratingBar.setRating(hotelList.get(position).getRating() / hotel.getNumberOfRates());
+        //holder.ratingBar.setOnRatingBarChangeListener(onRatingBarChangeListener(holder,position));
 
         // Create a storage reference from our app
 

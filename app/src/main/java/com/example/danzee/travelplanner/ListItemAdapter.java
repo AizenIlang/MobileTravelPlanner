@@ -76,10 +76,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Hotel hotel = hotelList.get(position);
         holder.name.setText(hotel.getName());
-        holder.company.setText(hotel.getCompany());
+        holder.company.setText(String.valueOf(hotel.getAveragePrice()));
 
 
-        holder.ratingBar.setRating(hotelList.get(position).getRating());
+        holder.ratingBar.setRating(hotelList.get(position).getRating() / hotel.getNumberOfRates());
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +95,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
         });
 
 
-        holder.ratingBar.setOnRatingBarChangeListener(onRatingBarChangeListener(holder,position));
+//        holder.ratingBar.setOnRatingBarChangeListener(onRatingBarChangeListener(holder,position));
 
 
         // Create a storage reference from our app

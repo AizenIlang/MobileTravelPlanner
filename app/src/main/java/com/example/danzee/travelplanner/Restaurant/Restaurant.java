@@ -21,12 +21,21 @@ public class Restaurant {
     private String Location2;
     private String Group;
     private float Rating;
+    private int NumberOfRates;
 
     @Exclude
     public Uri myUri;
 
     public Restaurant(){
 
+    }
+
+    public int getNumberOfRates() {
+        return NumberOfRates;
+    }
+
+    public void setNumberOfRates(int numberOfRates) {
+        NumberOfRates = numberOfRates;
     }
 
     public String getID() {
@@ -62,7 +71,7 @@ public class Restaurant {
     }
 
     public String getsPrice() {
-        return sPrice;
+        return String.valueOf(this.getPrice());
     }
 
     public void setsPrice(String sPrice) {

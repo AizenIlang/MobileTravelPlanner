@@ -37,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     public TextView mChosen_Dining_Name;
     public TextView mChosen_Dining_Price;
     public TextView mChosen_Total_Price;
+    public Button mRerserve_booking;
 
     public static Hotel theChosenHotel;
     public static Restaurant theChosenRestaurant;
@@ -80,18 +82,24 @@ public class MainActivity extends AppCompatActivity
             mChosen_Hotel_Name.setText(theChosenHotel.getName());
             mChosen_Hotel_Price.setText(YouwillBedeductedStringBuilder(theChosenRoom.getTotalCost()));
             myCost += theChosenRoom.getTotalCost();
+
+            mRerserve_booking.setVisibility(View.VISIBLE);
         }
 
         if(theChosenRestaurant != null){
             mChosen_Dining_Name.setText(theChosenRestaurant.getName());
             mChosen_Dining_Price.setText(YouwillBedeductedStringBuilder(theChosenRestaurant.getPrice()));
             myCost += theChosenRestaurant.getPrice();
+
+            mRerserve_booking.setVisibility(View.VISIBLE);
         }
 
         if(theChosenActivities != null){
             mChosen_Activity_Name.setText(theChosenActivities.getName());
             mChosen_Activity_Price.setText(YouwillBedeductedStringBuilder(theChosenActivities.getTotalCost()));
             myCost += theChosenActivities.getTotalCost();
+
+            mRerserve_booking.setVisibility(View.VISIBLE);
         }
         TotalMake(myCost);
     }
@@ -251,7 +259,8 @@ public class MainActivity extends AppCompatActivity
         mChosen_Activity_Name = (TextView) findViewById(R.id.chosen_activity_name);
         mChosen_Activity_Price = (TextView) findViewById(R.id.chosen_activity_price);
         mChosen_Total_Price = (TextView) findViewById(R.id.chosen_total_cost);
-
+        mRerserve_booking = (Button) findViewById(R.id.booking_add_reserve);
+        mRerserve_booking.setVisibility(View.GONE);
 
         hotelAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,6 +281,60 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this,RestaurantList.class));
             }
         });
+
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        mRerserve_booking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference databaseReference = firebaseDatabase.getReference()
+                        .child("Booking")
+                        .child(firebaseAuth.getCurrentUser().getUid())
+                        .push();
+                Booking booking = new Booking();
+
+                if(theChosenHotel != null){
+                    booking.setHotel(theChosenHotel);
+                }
+                if(theChosenRestaurant != null){
+                    ArrayList<Restaurant> restaurantArrayList = new ArrayList<Restaurant>();
+                    restaurantArrayList.add(theChosenRestaurant);
+                    booking.setRestaurantArrayList(restaurantArrayList);
+                }
+                if(theChosenActivities != null){
+                    ArrayList<Activities> activitiesArrayList = new ArrayList<Activities>();
+                    activitiesArrayList.add(theChosenActivities);
+                    booking.setActivitiesArrayList(activitiesArrayList);
+                }
+                if(theChosenRoom != null){
+                    booking.setRooms(theChosenRoom);
+                }
+                booking.setsTotalCost(mChosen_Total_Price.getText().toString());
+
+                databaseReference.setValue(booking, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        theChosenHotel = null;
+                        theChosenRestaurant = null;
+                        theChosenActivities = null;
+                        theChosenRoom = null;
+                        ResetValues();
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void ResetValues(){
+        mChosen_Total_Price.setText("");
+        mChosen_Activity_Price.setText("");
+        mChosen_Activity_Name.setText("");
+        mChosen_Hotel_Name.setText("");
+        mChosen_Dining_Name.setText("");
+        mChosen_Hotel_Price.setText("");
+        mChosen_Dining_Price.setText("");
+        mRerserve_booking.setVisibility(View.GONE);
     }
 
     private void SharedElementTransition(){

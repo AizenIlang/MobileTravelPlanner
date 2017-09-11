@@ -3,6 +3,7 @@ package com.example.danzee.travelplanner.Booking;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.MyViewHo
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.booking_list, parent, false);
 
-        return new BookingAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
@@ -48,7 +49,10 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return hotelList.size();
+        Log.e("Booking","Count that we HAve" + String.valueOf(hotelList.size()));
+        return 2;
+
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -59,9 +63,6 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.MyViewHo
             hotelName = itemView.findViewById(R.id.booking_list_item_HotelName);
             restaurantName = itemView.findViewById(R.id.booking_list_item_RestaurantName);
             activityName = itemView.findViewById(R.id.booking_list_item_ActivityName);
-
-
-
         }
     }
 }
