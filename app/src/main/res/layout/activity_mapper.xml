@@ -8,6 +8,7 @@
     tools:context="com.example.danzee.travelplanner.Mapper.Mapper">
 
     <RelativeLayout
+        android:id="@+id/mapper_coron"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
@@ -26,11 +27,12 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="CORON"
-            android:textSize="30dp"
-            android:textColor="@color/font_color_white"/>
+            android:textColor="@color/font_color_white"
+            android:textSize="30dp" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/mapper_elnido"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
@@ -54,6 +56,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/mapper_puerto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">

@@ -18,6 +18,7 @@ import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.MainActivity;
 import com.example.danzee.travelplanner.R;
+import com.example.danzee.travelplanner.User.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,24 +82,27 @@ public class ActivitiesDescription extends AppCompatActivity {
         hotelAddPrice = (TextView) findViewById(R.id.hotel_description_price);
         hotelAddPrice.setText(hotel.getsTotalCost());
         hotelBtn = (Button) findViewById(R.id.hotel_add_roombtn);
-        hotelBtn.setText("Register Activity");
+        hotelBtn.setText("Add Activity");
         hotelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(RoomDescription.this, RoomList.class));
-                MainActivity.theChosenActivities = hotel;
+                MainActivity.theChosenActivitiesarray.add(hotel);
 
                 Toast.makeText(getApplicationContext(),roomName + "Resgistered", Toast.LENGTH_LONG).show();
             }
         });
         Glide.with(this).load(hotel.myUri).into(hotelAddImageView);
 
-        hotelRateUs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bottomSheetDialog.show();
-            }
-        });
+        if(MainActivity.myUser.getType().equals(User.TYPE_USER)){
+            hotelRateUs.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    bottomSheetDialog.show();
+                }
+            });
+
+        }
 
         rateusRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override

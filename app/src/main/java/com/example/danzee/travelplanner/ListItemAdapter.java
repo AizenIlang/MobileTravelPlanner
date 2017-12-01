@@ -32,9 +32,6 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-/**
- * Created by Ravi Tamada on 18/05/16.
- */
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyViewHolder> {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -43,7 +40,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
     private Activity mActivity;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, company;
+        public TextView name, company, numberofrating;
         public ImageView imageView, overflow;
         public RatingBar ratingBar;
 
@@ -54,6 +51,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
             imageView = (ImageView) view.findViewById(R.id.booking_add_hotel_imageview);
             overflow = (ImageView) view.findViewById(R.id.booking_add_hotel_overflow);
             ratingBar = (RatingBar) view.findViewById(R.id.booking_add_hotel_rating);
+            numberofrating = (TextView) view.findViewById(R.id.booking_add_hotel_numberofrating);
         }
     }
 
@@ -93,6 +91,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyView
 
             }
         });
+
+        holder.numberofrating.setText(String.valueOf(hotel.getNumberOfRates()));
 
 
 //        holder.ratingBar.setOnRatingBarChangeListener(onRatingBarChangeListener(holder,position));

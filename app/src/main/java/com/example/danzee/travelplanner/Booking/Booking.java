@@ -24,8 +24,19 @@ public class Booking {
     private ArrayList<Restaurant> restaurantArrayList;
     private Rooms Rooms;
     private boolean Favorite;
+    private String date;
+
+
 
     public Booking() {
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public ArrayList<Restaurant> getRestaurantArrayList() {

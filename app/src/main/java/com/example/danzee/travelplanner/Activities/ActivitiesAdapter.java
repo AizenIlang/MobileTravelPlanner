@@ -103,7 +103,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
 // Create a reference with an initial file path and name
         String path = hotel.getPhotoURL();
 //        StorageReference pathReference = storageRef.child(path);
-
+        Log.e("Activity",hotel.getPhotoURL());
         storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

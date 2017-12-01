@@ -46,7 +46,8 @@
         <activity android:name=".Booking.BookingList" />
         <activity android:name=".MyProfile.MyProfile" />
         <activity android:name=".Mapper.Mapper" />
-        <activity android:name=".Admin.AdminBundle"></activity>
+        <activity android:name=".Admin.AdminBundle" />
+        <activity android:name=".User.UserProfile"></activity>
     </application>
 
 </manifest>

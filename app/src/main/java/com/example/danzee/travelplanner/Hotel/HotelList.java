@@ -1,5 +1,7 @@
 package com.example.danzee.travelplanner.Hotel;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.ListAdapter;
 
 import com.bumptech.glide.Glide;
 import com.example.danzee.travelplanner.ListItemAdapter;
+import com.example.danzee.travelplanner.MainActivity;
 import com.example.danzee.travelplanner.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +53,8 @@ public class HotelList extends AppCompatActivity {
     public LinearLayout sortAtoZ;
     public LinearLayout sortPrice;
     public LinearLayout sortRating;
+    public Context context = HotelList.this;
+    public Activity activity = HotelList.this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +81,7 @@ public class HotelList extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         hotelList = new ArrayList<>();
-        adapter = new ListItemAdapter(this, hotelList,this);
+
 
         sortAtoZ = bottomSheetView.findViewById(R.id.bottom_sheet_sort_az);
         sortPrice = bottomSheetView.findViewById(R.id.bottom_sheet_sort_price);
@@ -106,26 +111,59 @@ public class HotelList extends AppCompatActivity {
         Button elnido = (Button) findViewById(R.id.booking_add_hotel_elnido_btn);
         Button puerto = (Button) findViewById(R.id.booking_add_hotel_puerto_btn);
 
-        coron.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateListCoron();
-            }
-        });
+        if(MainActivity.theChosenGroup.equals(MainActivity.NONE)){
+            coron.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    populateListCoron();
+                }
+            });
 
-        elnido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateListElNido();
-            }
-        });
+            elnido.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    populateListElNido();
+                }
+            });
 
-        puerto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populateListPuerto();
-            }
-        });
+            puerto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    populateListPuerto();
+                }
+            });
+        }else if(MainActivity.theChosenGroup.equals("CORON")){
+            coron.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    populateListCoron();
+                }
+            });
+            populateListCoron();
+            elnido.setVisibility(View.GONE);
+            puerto.setVisibility(View.GONE);
+        }else if(MainActivity.theChosenGroup.equals("EL NIDO")){
+            elnido.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    populateListElNido();
+                }
+            });
+            populateListElNido();
+            coron.setVisibility(View.GONE);
+            puerto.setVisibility(View.GONE);
+        }else if(MainActivity.theChosenGroup.equals("PUERTO PRINCESSA")){
+            puerto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    populateListPuerto();
+                }
+            });
+            populateListPuerto();
+            coron.setVisibility(View.GONE);
+            puerto.setVisibility(View.GONE);
+        }
+
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -215,6 +253,7 @@ public class HotelList extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter = new ListItemAdapter(context, hotelList,activity);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -265,6 +304,7 @@ public class HotelList extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter = new ListItemAdapter(context, hotelList,activity);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -314,6 +354,7 @@ public class HotelList extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter = new ListItemAdapter(context, hotelList,activity);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -363,6 +404,7 @@ public class HotelList extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter = new ListItemAdapter(context, hotelList,activity);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -452,7 +494,7 @@ public class HotelList extends AppCompatActivity {
         Collections.sort(hotelList, new Comparator<Hotel>() {
             @Override
             public int compare(Hotel hotel, Hotel t1) {
-                return Float.compare(hotel.getRating(),t1.getRating());
+                return Float.compare(hotel.getRating() / hotel.getNumberOfRates(),t1.getRating() /t1.getNumberOfRates());
             }
 
 

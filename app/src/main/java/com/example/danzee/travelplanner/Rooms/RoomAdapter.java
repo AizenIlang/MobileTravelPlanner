@@ -69,8 +69,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final Rooms hotel = hotelList.get(position);
         holder.name.setText(hotel.getName());
-        holder.company.setText("Max Person " + hotel.getSize());
-
+//        holder.company.setText("Max Person " + hotel.getSize());
+        holder.company.setText(hotel.getsTotalCost());
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

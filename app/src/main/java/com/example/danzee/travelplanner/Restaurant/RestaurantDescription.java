@@ -18,6 +18,7 @@ import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.MainActivity;
 import com.example.danzee.travelplanner.R;
+import com.example.danzee.travelplanner.User.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -82,14 +83,17 @@ public class RestaurantDescription extends AppCompatActivity {
         hotelAddName.setText(hotel.getName());
 //        hotelAddCompany.setText(hotel.getsPrice());
         hotelBtn = (Button) findViewById(R.id.hotel_add_roombtn);
-        hotelBtn.setText("Reserve");
+        hotelBtn.setText("Add Restaurant");
 
-        hotelRateUs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bottomSheetDialog.show();
-            }
-        });
+        if(MainActivity.myUser.getType().equals(User.TYPE_USER)){
+            hotelRateUs.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    bottomSheetDialog.show();
+                }
+            });
+        }
+
 
 
         rateusRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -127,10 +131,11 @@ public class RestaurantDescription extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                MainActivity.theChosenRestaurant = hotel;
+                MainActivity.theChosenRestaurantarray.add(hotel);
 
 //                startActivity(new Intent(RoomDescription.this, RoomList.class));
                 Toast.makeText(getApplicationContext(),roomName + "Reserved", Toast.LENGTH_LONG).show();
+                RestaurantDescription.this.finish();
             }
         });
         Glide.with(this).load(hotel.myUri).into(hotelAddImageView);

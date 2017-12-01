@@ -15,6 +15,7 @@ import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
 import com.example.danzee.travelplanner.MainActivity;
 import com.example.danzee.travelplanner.R;
+import com.example.danzee.travelplanner.User.User;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
@@ -60,18 +61,21 @@ public class RoomDescription extends AppCompatActivity {
         hotelAddName.setText(hotel.getName());
         hotelAddCompany.setText(hotel.getsTotalCost());
         hotelBtn = (Button) findViewById(R.id.hotel_add_roombtn);
-        hotelBtn.setText("Book");
-        hotelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        hotelBtn.setText("Add Room");
+        if(MainActivity.myUser.getType().equals(User.TYPE_USER)){
+            hotelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 //                startActivity(new Intent(RoomDescription.this, RoomList.class));
-                MainActivity.theChosenRoom = hotel;
-                MainActivity.theChosenHotel = HotelList.selection;
+                    MainActivity.theChosenRoom = hotel;
+                    MainActivity.theChosenHotel = HotelList.selection;
 
 
-                Toast.makeText(getApplicationContext(),HotelList.selection.getName() + " " + roomName + "Booked", Toast.LENGTH_LONG).show();
-            }
-        });
+                    Toast.makeText(getApplicationContext(),HotelList.selection.getName() + " " + roomName + "Booked", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
         //Glide.with(this).load(hotel.myUri).into(hotelAddImageView);
         Picasso.with(this)
                         .load(hotel.myUri)

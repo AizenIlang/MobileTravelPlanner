@@ -1,8 +1,10 @@
 package com.example.danzee.travelplanner;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -39,7 +41,8 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
     private EditText passwordText;
     private Button loginBtn;
     private Button registerBtn;
-
+    SharedPreferences mySharedpref;
+    SharedPreferences.Editor editor;
 
 
     @Override
@@ -57,6 +60,10 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
 
         loginBtn.setOnClickListener(new onLoginClick());
         registerBtn.setOnClickListener(new onRegistrationClick());
+         mySharedpref = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+       editor = mySharedpref.edit();
+        loginText.setText(mySharedpref.getString("username",""));
+        passwordText.setText(mySharedpref.getString("password",""));
 
     }
 
@@ -70,7 +77,8 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
 
     }
 
-    public void AttemptLogin(final String Email, String Password){
+    public void AttemptLogin(final String Email, final String Password){
+        Context c = Login.this;
         mAuth.signInWithEmailAndPassword(Email,Password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -79,9 +87,17 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG_LOGIN, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            editor.putString("username",Email);
+                            editor.putString("password",Password);
+                            editor.commit();
 
-                            startActivity(new Intent(Login.this,MainActivity.class));
-                            finish();
+                            if(mAuth.getCurrentUser().isEmailVerified()){
+                                startActivity(new Intent(Login.this,MainActivity.class));
+                                finish();
+                            }else{
+                               SendEmail();
+                            }
+
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -92,6 +108,30 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
                         }
 
                         // ...
+                    }
+                });
+    }
+
+    public void SendEmail(){
+    final Context c = Login.this;
+        final FirebaseUser user3 = mAuth.getCurrentUser();
+        user3.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        // Re-enable button
+//                                                findViewById(R.id.verify_email_button).setEnabled(true);
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(c,
+                                    "Verification email sent to " + user3.getEmail(),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.e(TAG_LOGIN, "sendEmailVerification", task.getException());
+                            Toast.makeText(c,
+                                    "Failed to send verification email.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -135,9 +175,10 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(mAuth.getCurrentUser().getUid())){
                     User newUser = dataSnapshot.getValue(User.class);
-                    startActivity(new Intent(Login.this,MainActivity.class));
-                    finish();
+//                    startActivity(new Intent(Login.this,MainActivity.class));
+//                    finish();
                     //finish the Intent here
+                    SendEmail();
 
                 }else{
                     userReference.child(mAuth.getCurrentUser().getUid()).setValue(user,
@@ -145,7 +186,8 @@ public class Login extends AppCompatActivity implements Registration.OnFragmentI
 
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    startActivity(new Intent(Login.this,MainActivity.class));
+//                                    startActivity(new Intent(Login.this,MainActivity.class));
+                                    SendEmail();
                                 }
                             });
                 }

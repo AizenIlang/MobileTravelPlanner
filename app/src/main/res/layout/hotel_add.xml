@@ -89,13 +89,13 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/hotel_add_name"
+                android:layout_below="@+id/hotel_add_company"
                 android:layout_marginTop="25dp"
                 android:elevation="5dp"
-                android:text="Avail Room"
+                android:text="Add Room"
                 android:textSize="20dp"
-                android:textStyle="bold"
-                android:layout_below="@+id/hotel_add_company"
-                android:layout_alignStart="@+id/hotel_add_name" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/hotel_add_company"

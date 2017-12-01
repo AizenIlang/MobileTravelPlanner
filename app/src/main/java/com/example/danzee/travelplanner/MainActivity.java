@@ -1,9 +1,17 @@
 package com.example.danzee.travelplanner;
 
 import android.app.ActivityOptions;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,8 +22,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.danzee.travelplanner.Activities.Activities;
 import com.example.danzee.travelplanner.Activities.ActivitiesList;
@@ -24,10 +35,12 @@ import com.example.danzee.travelplanner.Booking.Booking;
 import com.example.danzee.travelplanner.Booking.BookingList;
 import com.example.danzee.travelplanner.Hotel.Hotel;
 import com.example.danzee.travelplanner.Hotel.HotelList;
+import com.example.danzee.travelplanner.Mapper.Mapper;
 import com.example.danzee.travelplanner.Restaurant.Restaurant;
 import com.example.danzee.travelplanner.Restaurant.RestaurantList;
 import com.example.danzee.travelplanner.Rooms.Rooms;
 import com.example.danzee.travelplanner.User.User;
+import com.example.danzee.travelplanner.User.UserProfile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +50,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,15 +64,18 @@ public class MainActivity extends AppCompatActivity
     private TextView UserName;
     private TextView Email;
     private ImageView ProfilePic;
-    private User myUser;
+    public static User myUser;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Menu navMenu;
     private MenuItem menuItemAdmin;
+    public Context mContext = MainActivity.this;
 
     public static String MapPick;
     public static final String HOTEL = "HOTEL";
     public static final String RESTAURANT ="RESTAURANT";
     public static final String ACTIVITY = "ACTIVITY";
+    public static final String NONE = "NONE";
+
 
     //FOR BOOKINGS
 
@@ -67,45 +86,85 @@ public class MainActivity extends AppCompatActivity
     public TextView mChosen_Dining_Name;
     public TextView mChosen_Dining_Price;
     public TextView mChosen_Total_Price;
+    public RecyclerView mRecyclerView;
     public Button mRerserve_booking;
+    public TextView mChosen_Calender;
+    public TextView mChosen_Calender2;
+    public DatePicker mCalendarView;
+    public TextView mBudget;
+
+    public boolean fromto = false;
 
     public static Hotel theChosenHotel;
     public static Restaurant theChosenRestaurant;
     public static Rooms theChosenRoom;
     public static Activities theChosenActivities;
+    public static String theChosenGroup = NONE;
+
+
+    public static ArrayList<Restaurant> theChosenRestaurantarray = new ArrayList<Restaurant>();
+    public static ArrayList<Activities> theChosenActivitiesarray = new ArrayList<Activities>();
 
 
 
     public void ResetText(){
         double myCost = 0;
+        Log.e("Main","ResetText Called");
+        ArrayList<POJOstringitem> myTempPojo = new ArrayList<POJOstringitem>();
         if(theChosenHotel != null){
-            mChosen_Hotel_Name.setText(theChosenHotel.getName());
-            mChosen_Hotel_Price.setText(YouwillBedeductedStringBuilder(theChosenRoom.getTotalCost()));
+            theChosenGroup = theChosenHotel.getGroup();
+//            mChosen_Hotel_Name.setText(theChosenHotel.getName());
+//            mChosen_Hotel_Price.setText(YouwillBedeductedStringBuilder(theChosenRoom.getTotalCost()));
+            POJOstringitem temp = new POJOstringitem();
+            temp.name = theChosenHotel.getName();
+            temp.price = theChosenRoom.getTotalCost();
+            myTempPojo.add(temp);
             myCost += theChosenRoom.getTotalCost();
+            if(theChosenHotel != null && theChosenRoom != null){
+                mRerserve_booking.setVisibility(View.VISIBLE);
+            }
 
-            mRerserve_booking.setVisibility(View.VISIBLE);
         }
 
-        if(theChosenRestaurant != null){
-            mChosen_Dining_Name.setText(theChosenRestaurant.getName());
-            mChosen_Dining_Price.setText(YouwillBedeductedStringBuilder(theChosenRestaurant.getPrice()));
-            myCost += theChosenRestaurant.getPrice();
+        if(theChosenRestaurantarray.size() > 0){
+            for(Restaurant myrest : theChosenRestaurantarray){
+                theChosenGroup = myrest.getGroup();
+                POJOstringitem temp = new POJOstringitem();
+                temp.name = myrest.getName();
+                temp.price = myrest.getPrice();
+                myCost += temp.price;
+                myTempPojo.add(temp);
+            }
 
-            mRerserve_booking.setVisibility(View.VISIBLE);
         }
+        if(theChosenActivitiesarray.size() > 0){
+            for(Activities myact : theChosenActivitiesarray){
+                theChosenGroup = myact.getGroup();
+                POJOstringitem temp = new POJOstringitem();
+                temp.name = myact.getName();
+                temp.price = myact.getTotalCost();
+                myCost += temp.price;
+                myTempPojo.add(temp);
+            }
 
-        if(theChosenActivities != null){
-            mChosen_Activity_Name.setText(theChosenActivities.getName());
-            mChosen_Activity_Price.setText(YouwillBedeductedStringBuilder(theChosenActivities.getTotalCost()));
-            myCost += theChosenActivities.getTotalCost();
-
-            mRerserve_booking.setVisibility(View.VISIBLE);
         }
+        MainActivityRecyclerAdapter mainActivityRecyclerAdapter = new MainActivityRecyclerAdapter(MainActivity.this,myTempPojo,MainActivity.this);
+        mRecyclerView.setAdapter(mainActivityRecyclerAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         TotalMake(myCost);
     }
 
     public void TotalMake(double val){
         mChosen_Total_Price.setText(YouwillBedeductedStringBuilder(val));
+        if(myUser != null){
+            if(val > myUser.getBudget()){
+                mChosen_Total_Price.setTextColor(Color.parseColor("#000000"));
+                Toast.makeText(MainActivity.this,"Budget too low...",Toast.LENGTH_LONG).show();
+            }else{
+                mChosen_Total_Price.setTextColor(Color.parseColor("#ff4081"));
+            }
+        }
+
 
     }
 
@@ -152,6 +211,7 @@ public class MainActivity extends AppCompatActivity
         UserName = navView.findViewById(R.id.nav_header_profile_name);
         Email = navView.findViewById(R.id.nav_header_email_address);
         ProfilePic = navView.findViewById(R.id.nav_header_profile_pic);
+        mBudget = navView.findViewById(R.id.nav_header_budget);
 
         navMenu = navigationView.getMenu();
         menuItemAdmin = navMenu.findItem(R.id.nav_admin);
@@ -166,6 +226,8 @@ public class MainActivity extends AppCompatActivity
                 myUser = dataSnapshot.getValue(User.class);
                 UserName.setText(myUser.getUserName());
                 Email.setText(myUser.getEmail());
+
+                mBudget.setText(String.valueOf(myUser.getBudget()));
                 if(myUser.getType().equals("USER")){
                     menuItemAdmin.setVisible(false);
                 }else if(myUser.getType().equals("ADMIN")){
@@ -225,13 +287,16 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, Admin.class));
 
         } else if (id == R.id.nav_hotels) {
-
+            MainActivity.MapPick = MainActivity.HOTEL;
+            startActivity(new Intent(MainActivity.this, Mapper.class));
         } else if (id == R.id.nav_activities) {
-
+            MainActivity.MapPick = MainActivity.ACTIVITY;
+            startActivity(new Intent(MainActivity.this, Mapper.class));
         } else if (id == R.id.nav_restaurant) {
-
+            MainActivity.MapPick = MainActivity.RESTAURANT;
+            startActivity(new Intent(MainActivity.this, Mapper.class));
         } else if (id == R.id.nav_my_profile) {
-
+            startActivity(new Intent(MainActivity.this, UserProfile.class));
         } else if(id == R.id.nav_log_out){
             mAuth.signOut();
         }
@@ -247,17 +312,101 @@ public class MainActivity extends AppCompatActivity
         mAuth.addAuthStateListener(mAuthListener);
     }
 
+    public static boolean validatePastDate(Context mContext, int day, int month, int year){
+        final Calendar c = Calendar.getInstance();
+        int currentYear = c.get(Calendar.YEAR);
+        int currentMonth = c.get(Calendar.MONTH)+1;
+        int currentDay = c.get(Calendar.DAY_OF_MONTH);
+        if (day > currentDay && year == currentYear && month == currentMonth) {
+            Toast.makeText(mContext, "Please select valid date", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (month > currentMonth && year == currentYear) {
+            Toast.makeText(mContext, "Please select valid month", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (year > currentYear) {
+            Toast.makeText(mContext, "Please select valid year", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean validateFutureDate(Context mContext,int day,int month,int year){
+        final Calendar c = Calendar.getInstance();
+        int currentYear = c.get(Calendar.YEAR);
+        int currentMonth = c.get(Calendar.MONTH);
+        int currentDay = c.get(Calendar.DAY_OF_MONTH);
+        if (day < currentDay && year == currentYear && month == currentMonth) {
+            Toast.makeText(mContext, "Please select valid date", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (month < currentMonth && year == currentYear) {
+            Toast.makeText(mContext, "Please select valid month", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (year < currentYear) {
+            Toast.makeText(mContext, "Please select valid year", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
     private void initPage(){
         Button hotelAddButton = (Button) findViewById(R.id.booking_add_Hotel);
         Button activityAddButton = (Button) findViewById(R.id.booking_add_ActivityBtn);
         Button restaurantAddButton = (Button) findViewById(R.id.booking_add_RestaurantBtn);
+        mChosen_Calender = (TextView) findViewById(R.id.main_activity_date);
+        mChosen_Calender2 = (TextView) findViewById(R.id.main_activity_date2);
 
-        mChosen_Hotel_Name = (TextView) findViewById(R.id.chosen_hotel_name);
-        mChosen_Hotel_Price = (TextView) findViewById(R.id.chosen_hotel_price);
-        mChosen_Dining_Name = (TextView) findViewById(R.id.chosen_dining_name);
-        mChosen_Dining_Price = (TextView) findViewById(R.id.chosen_dining_price);
-        mChosen_Activity_Name = (TextView) findViewById(R.id.chosen_activity_name);
-        mChosen_Activity_Price = (TextView) findViewById(R.id.chosen_activity_price);
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        final View bottomSheetView = getLayoutInflater().inflate(R.layout.calendar_view,null);
+        bottomSheetDialog.setContentView(bottomSheetView);
+        mCalendarView = (DatePicker) bottomSheetView.findViewById(R.id.datePicker);
+        mCalendarView.setMinDate(System.currentTimeMillis() - 1000);
+        mChosen_Calender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fromto = false;
+                bottomSheetDialog.show();
+            }
+        });
+        mChosen_Calender2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fromto = true;
+                bottomSheetDialog.show();
+            }
+        });
+
+        bottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                int day = mCalendarView.getDayOfMonth();
+                int month = mCalendarView.getMonth();
+                int year = mCalendarView.getYear();
+
+                if(validateFutureDate(mContext,day,month,year)){
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yy");
+                    Date d = new Date(year, month, day);
+                    String strDate = dateFormatter.format(d);
+                    if(fromto){
+                        mChosen_Calender2.setText(strDate);
+                    }else{
+                        mChosen_Calender.setText(strDate);
+                    }
+                }
+
+
+
+            }
+        });
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.main_activity_recyclerview);
+//        mChosen_Hotel_Name = (TextView) findViewById(R.id.chosen_hotel_name);
+//        mChosen_Hotel_Price = (TextView) findViewById(R.id.chosen_hotel_price);
+//        mChosen_Dining_Name = (TextView) findViewById(R.id.chosen_dining_name);
+//        mChosen_Dining_Price = (TextView) findViewById(R.id.chosen_dining_price);
+//        mChosen_Activity_Name = (TextView) findViewById(R.id.chosen_activity_name);
+//        mChosen_Activity_Price = (TextView) findViewById(R.id.chosen_activity_price);
         mChosen_Total_Price = (TextView) findViewById(R.id.chosen_total_cost);
         mRerserve_booking = (Button) findViewById(R.id.booking_add_reserve);
         mRerserve_booking.setVisibility(View.GONE);
@@ -296,15 +445,17 @@ public class MainActivity extends AppCompatActivity
                 if(theChosenHotel != null){
                     booking.setHotel(theChosenHotel);
                 }
-                if(theChosenRestaurant != null){
-                    ArrayList<Restaurant> restaurantArrayList = new ArrayList<Restaurant>();
-                    restaurantArrayList.add(theChosenRestaurant);
-                    booking.setRestaurantArrayList(restaurantArrayList);
+                if(theChosenActivitiesarray.size() > 0){
+
+                    booking.setActivitiesArrayList(theChosenActivitiesarray);
                 }
-                if(theChosenActivities != null){
-                    ArrayList<Activities> activitiesArrayList = new ArrayList<Activities>();
-                    activitiesArrayList.add(theChosenActivities);
-                    booking.setActivitiesArrayList(activitiesArrayList);
+                if(theChosenRestaurantarray.size() > 0){
+
+                    booking.setActivitiesArrayList(theChosenActivitiesarray);
+                }
+
+                if(!mChosen_Calender.equals("SET DATE")){
+                    booking.setDate(mChosen_Calender.getText().toString());
                 }
                 if(theChosenRoom != null){
                     booking.setRooms(theChosenRoom);
@@ -318,6 +469,8 @@ public class MainActivity extends AppCompatActivity
                         theChosenRestaurant = null;
                         theChosenActivities = null;
                         theChosenRoom = null;
+                        theChosenActivitiesarray.clear();
+                        theChosenRestaurantarray.clear();
                         ResetValues();
                     }
                 });
@@ -327,13 +480,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void ResetValues(){
-        mChosen_Total_Price.setText("");
-        mChosen_Activity_Price.setText("");
-        mChosen_Activity_Name.setText("");
-        mChosen_Hotel_Name.setText("");
-        mChosen_Dining_Name.setText("");
-        mChosen_Hotel_Price.setText("");
-        mChosen_Dining_Price.setText("");
+
         mRerserve_booking.setVisibility(View.GONE);
     }
 
